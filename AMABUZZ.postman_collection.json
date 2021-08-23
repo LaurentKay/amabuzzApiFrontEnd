@@ -1,0 +1,222 @@
+{
+	"info": {
+		"_postman_id": "a4816112-57ae-4d69-a3ed-72e84fcc2c52",
+		"name": "AMABUZZ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:4000/products",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Affordability",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MDNjZTdmMDEyNDI5ZDBmMWZjMzFmOWQiLCJpZCI6IjYwM2NlN2YwMTI0MjlkMGYxZmMzMWY5ZCIsImlhdCI6MTYxNDk2NzYxNCwiZXhwIjoxNjE0OTY4NTE0fQ.1KUOoKlDky56fGsiHHKaFbUhL0IBAT3RDFgf-QlfRVA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"affordability\":[{\"customerId\":\"6001a311543980814b99cfe1\",\n    \"monthlyFixedsalary\": 10,\n    \"monthlyOvertime\": 10,\n    \"monthlyOtherIncome\": 10,\n    \"familyContribution\": 10,\n    \"spouseJointIncome\": 10,\n    \"monthlyGrossIncome\": 10,\n    \"totalDeductions\": 10,\n    \"monthlyNettIncome\": 10,\n    \"expenseAccomodation\": 10,\n    \"expenseTransport\": 23,\n    \"expenseFood\": 10,\n    \"expsenseEducation\": 10,\n    \"expenseMedical\": 10,\n    \"expenseUtilities\": 10,\n    \"expenseMaintenance\": 10,\n    \"totalMonthlyExpense\": 10,\n    \"loans1\": 10,\n    \"loand2\": 10,\n    \"loans3\": 10,\n    \"loans4\": 10,\n    \"bankStatementMonthlyExpenses\": 10,\n    \"incomeMinusExpensesTotal\": 23\n}]}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4000/customers/affordability/123",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"customers",
+						"affordability",
+						"123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get Customers",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MDNjZTdmMDEyNDI5ZDBmMWZjMzFmOWQiLCJpZCI6IjYwM2NlN2YwMTI0MjlkMGYxZmMzMWY5ZCIsImlhdCI6MTYxNDYwODQ2NCwiZXhwIjoxNjE0NjA5MzY0fQ.HpKTZhe3WWS52ItxzJp8afOgsWCg9aMVOaCZkonrcG0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:4000/customers",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n       \"title\": \"Mister\",\n        \"firstName\": \"Johnathan\",\n        \"lastName\": \"Kempathan\",\n        \"email\": \"jeromesmiths@gmail.com\",\n        \"password\": \"12345678\",\n        \"confirmPassword\": \"12345678\",\n        \"acceptTerms\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4000/accounts/register",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"accounts",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"jeromesmiths@gmail.com\",\n    \"password\":\"12345678\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4000/accounts/authenticate",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"accounts",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "verify email",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"token\": \"\"}"
+				},
+				"url": {
+					"raw": "localhost:4000/accounts/verify-email",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"accounts",
+						"verify-email"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Customer By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:4000/customer/",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"customer",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "dXNlcjE6bWFqZTkybWFsMTBxdGV1ODJtMjBzbTIwMXdx",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
