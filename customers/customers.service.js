@@ -56,7 +56,7 @@ function addCreditScore(customer){
         homeAddress1, homeAddress2, homeCity, homeSuburb, homePostalCode,
         bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, uploadedDocs, creditScore, affordability,
         Balance, PayPercent, GroupName, Last10Txns}; //compuscan;
-    console.log(newcustomer);
+    //console.log(newcustomer);
     return newcustomer;
 }
 
@@ -64,7 +64,7 @@ function insertSignature(customerSignature)
 {
     const {_id, CustomerIDnumber, signature, dateSigned, IPAddress} = customerSignature;
     const  newcustomerSignature = { _id, CustomerIDnumber, signature, dateSigned, IPAddress};
-    console.log(newcustomerSignature);
+    //console.log(newcustomerSignature);
     return newcustomerSignature;
 }
 
@@ -77,7 +77,7 @@ async function getAll() {
         for(var t = 0; t < ccsCustomers.length; t++){
             //console.log("t : ",t, ccsArr[t]);
             if(customers[j].RSAIDNumber === ccsCustomers[t].IDNumber){
-                console.log("Found: ", ccsCustomers[t]);
+                //console.log("Found: ", ccsCustomers[t]);
                 customers[j].Balance = ccsCustomers[t].Balance;
                 customers[j].PayPercent = ccsCustomers[t].PayPercent;
                 customers[j].GroupName = ccsCustomers[t].GroupName;
@@ -107,7 +107,7 @@ async function getAllCustomerDocs(){
         }
 
     }
-    console.log('The upload: ' + customerss);
+    //console.log('The upload: ' + customerss);
     return customerss; //.map(x=>basicDetails(x).uploadedDocs);
 }
 async function getById(id) {
@@ -165,7 +165,7 @@ async function create(params) {
 async function createCustomer(params) {
     // validate
     let testcustomer = await db.CustomerLogin.findOne({"RSAIDNumber":params.RSAIDNumber});
-    console.log('Whats returned? ', testcustomer);
+    //console.log('Whats returned? ', testcustomer);
     if(testcustomer){
         throw 'Cutomer: ' + params.RSAIDNumber + ' already registered';
     }
@@ -196,7 +196,7 @@ async function updateCustDoc(id, uploadeDocs){
         }
     }
     const result = await  db.Customer.updateOne(filter, updateDoc);
-    return uploadeDocs; //result;
+    return result; //result;
 }
 async function updateAssessment(id, body) {
     const bodyAff = body; //[0];
@@ -245,7 +245,7 @@ async function insertSignature(params) {
   }
 async function authenticate({ RSAIDNumber, customerPassword, ipAddress }) {
     const custRet = await db.CustomerLogin.findOne({ RSAIDNumber });
-    console.log(custRet, customerPassword);
+    //console.log(custRet, customerPassword);
     if (!custRet  || !bcrypt.compareSync(customerPassword, custRet.customerPassword)) {
         throw 'ID number or password is incorrect';
     }

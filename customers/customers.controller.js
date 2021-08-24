@@ -60,9 +60,6 @@ function updateAssemssmentSchema (req, res, next) {
 
   const affordSchema = Joi.object().keys({
     customerId:Joi.string(),
-    monthlyFixedsalary: Joi.number(),
-    monthlyOvertime: Joi.number(),
-    monthlyOtherIncome: Joi.number(),
     incomerental: Joi.number(),
     familyContribution: Joi.number(),
     spouseJointIncome: Joi.number(),
@@ -97,16 +94,12 @@ function updateAssemssmentSchema (req, res, next) {
     expenseRent: Joi.number(),
     expenseTransport: Joi.number(),
     expenseUtilities: Joi.number(),
-    incomemonthlyFixedsalary: Joi.number(),
-    incomemonthlyOtherIncome: Joi.number(),
-    incomemonthlyOvertime: Joi.number(),
-    incomerental: Joi.number(),
     installMent: Joi.number(),
     loan1: Joi.number(),
     loanTerms: Joi.number(),
     affordabilityCalculation: affordabilityCalculationSchema
   })
-  console.log(req.body);
+  //console.log(req.body);
   // const calcIncome = () => {
   //   let obj = req.body[0];// ? req.body[0] : req.body;
   //   return (obj.monthlyFixedsalary + obj.monthlyOvertime +
@@ -154,7 +147,7 @@ function authenticate(req, res, next) {
   customerService.authenticate({ RSAIDNumber, customerPassword, ipAddress })
     .then(({ account, jwtToken,custRet }) => {
       //setTokenCookie(res, refreshToken);
-      console.log('=>: ', account);
+      //console.log('=>: ', account);
       res.json({account, custRet});
     })
     .catch(next);
@@ -214,68 +207,48 @@ function getDocuments(req, res, next){
     //res.send([{firstName:'John', lastName:'Doe', idNumber:'1234567890123',bankStatement:'Thistest.pdf', paySlips:'thispayslips.pdf' }])
 }
 function uploads(req, res, next){
-    if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).send('No files were uploaded.');
-    }
+    // if (!req.files || Object.keys(req.files).length === 0) {
+    //     return res.status(400).send('No files were uploaded.');
+    // }
 
     // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file __dirname +
-    console.log(req.body);
-    const uploadPath = 'C:/myprojects/amabuzz/public/uploads/';
-    const attach1 = req.files.attach1;
-    attach1.mv(uploadPath + attach1.name);
-    //const paySlips = req.files.paySlip
-    const fePath = "./uploads/";
+    //console.log(req.body);
+    // const uploadPath = 'C:/myprojects/amabuzz/public/uploads/';
+    // const attach1 = req.files.attach1;
+    // attach1.mv(uploadPath + attach1.name);
+    // //const paySlips = req.files.paySlip
+    // const fePath = "./uploads/";
 
       // Use the mv() method to place the file somewhere on your server
 
 
     //type_date_idnumber bank_20210101_8798765131452_1
-    var todayDate = replaceAll(new Date().toLocaleDateString('en-ZA'),"/", ""); //new Date().toISOString().slice(0, 10);
-    let saveStatPath = '';
-    let paySlipPath = '';
-    var bexten = attach1.name.split(".")[1];
-    let DocumentDet = {};
-    if(req.body.documentType === "bankStatement"){
-        saveStatPath = 'bank_' + todayDate + "_" + req.body.idNumber + "_1."+bexten;
-        DocumentDet.bankStatement = fePath + saveStatPath;
-    }else if(req.body.documentType === "payslip"){
-        saveStatPath = 'pay_' + todayDate + "_" + req.body.idNumber + "_2."+bexten;
-        DocumentDet.paySlip =fePath + saveStatPath;
-    }else if(req.body.documentType === 'identityDocument'){
-        saveStatPath = 'id_' + todayDate + "_" + req.body.idNumber + "_3."+bexten;
-        DocumentDet.idDocument = fePath + saveStatPath;
-    }
-    fs.rename(uploadPath + attach1.name, uploadPath + saveStatPath, function(err){
-        if(err) {console.log(err);}else{
-        console.log('The file has been renamed ' + saveStatPath);}
-    });
-    // if(paySlips){
-    //     paySlips.mv(uploadPath + paySlips.name);
-    //     paySlipPath = 'pay_' + todayDate + "_" + req.body.idNumber + "_2."+pextn;
-    //     var pextn = paySlips.name.split(".")[1];
-    //     fs.rename(uploadPath + paySlips.name, uploadPath + paySlipPath, function(err){
-    //         if(err) {console.log(err)}
-    //         console.log('The payslips has been renamed ' + paySlipPath);
-    //     });
+    // var todayDate = replaceAll(new Date().toLocaleDateString('en-ZA'),"/", ""); 
+    // let saveStatPath = '';
+    // let paySlipPath = '';
+    // var bexten = attach1.name.split(".")[1];
+    // let DocumentDet = {};
+    // if(req.body.documentType === "bankStatement"){
+    //     saveStatPath = 'bank_' + todayDate + "_" + req.body.idNumber + "_1."+bexten;
+    //     DocumentDet.bankStatement = fePath + saveStatPath;
+    // }else if(req.body.documentType === "payslip"){
+    //     saveStatPath = 'pay_' + todayDate + "_" + req.body.idNumber + "_2."+bexten;
+    //     DocumentDet.paySlip =fePath + saveStatPath;
+    // }else if(req.body.documentType === 'identityDocument'){
+    //     saveStatPath = 'id_' + todayDate + "_" + req.body.idNumber + "_3."+bexten;
+    //     DocumentDet.idDocument = fePath + saveStatPath;
     // }
-    let uploadedDocs ={};
-    uploadedDocs = Object.assign({name: req.body.name, surname:req.body.surname,
-                    idNumber:req.body.idNumber, bankStatement:req.body.bankStatement, paySlip:req.body.paySlip,
-                    idDocument:req.body.idDocument,dateUploaded:new Date().toLocaleDateString('en-ZA')}, DocumentDet);
-    // let uploadedDocs = {
-    //     name:req.body.name,
-    //     surname:req.body.surname,
-    //     idNumber:req.body.idNumber,
-    //     dateUploaded:new Date().toLocaleDateString('en-ZA')
-    // };
-    // uploadedDocs = Object.assign(uploadedDocs, DocumentDet);
-    console.log(uploadedDocs);
-    // documentType: req.body.documentType,
-    // bankStatment:req.body.documentType === "bankStatement" ?  fePath+saveStatPath : '',
-    // paySlip: req.body.documentType === "payslip" ? fePath+saveStatPath : '',
-    // idDocument: req.body.documentType === "identityDocument" ? fePath + saveStatPath : ''
+    // fs.rename(uploadPath + attach1.name, uploadPath + saveStatPath, function(err){
+    //     if(err) {console.log(err);}else{
+    //     console.log('The file has been renamed ' + saveStatPath);}
+    // });
+    
+    let uploadedDocs = req.body;
+    uploadedDocs.dateUploaded = new Date().toLocaleDateString('en-ZA');
+    
+    //console.log(uploadedDocs);
 
-    customerService.updateCustDoc(req.params.id, uploadedDocs)
+    customerService.updateCustDoc(req.body.idNumber, uploadedDocs)
         .then(customer => res.json(customer))
         .catch(next);
     //res.send('File(s) uploaded');
@@ -513,7 +486,7 @@ function createHistory(req, res, next){
 
 function insertSignature(req, res, next)
 {
-  console.log(req);
+  //console.log(req);
   customerService.insertSignature(req.body)
     .then(customerSignature => res.send(customerSignature))
     .catch(next);
