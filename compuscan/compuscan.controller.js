@@ -17,6 +17,7 @@ router.get('/:id', authorize(), getById); //
 router.get('/getReportFromDB/:id',  getReportFromDB); //authorize(),
 //router.get('/insertHistory/:id',  authorize(), getReport, createSchema, createHistory); //
 router.post('/insertHistory',  createHistory); //
+router.post('/saveCustomerCompuscanAnswers', insertCustomerAnswers)
 
 module.exports = router;
 
@@ -545,3 +546,12 @@ function getReportFromDB(req, res, next)
         // })
         .catch(next);
 }
+
+//Save the customer's Compuscan answers from the random questions used as part of the verification 
+function insertCustomerAnswers(req, res, next){
+    console.log(req.body)
+    compuscanService.insertCustomerAnswers(req.body)
+        .then(compuscan =>res.send(compuscan))
+        .catch(next);
+}
+

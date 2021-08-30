@@ -3,6 +3,8 @@ const xml2js = require('xml2js');
 const request = require('request');
 const fs = require('fs');
 const JSZip = require('jszip');
+const config = require('config.json');
+const mongodb = require('mongodb')
 
 const parser = new xml2js.Parser({explicitArray: false, trim: true, stripPrefix:true});
 
@@ -10,8 +12,24 @@ module.exports ={
     create,
     getById,
     getReportFromDB,
-    createHistory
+    createHistory,
+    insertCustomerAnswers
 }
+
+
+
+let dbTruId;
+let connectionString = config.connectionString
+
+mongodb.connect(
+  connectionString,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  function (err, truID) {
+    dbTruId = truID.db()
+    
+  }
+)
+
 
 async function getById(id) {
     const compuscan = await getReport(id);
@@ -60,4 +78,24 @@ async function getReportFromDB(id) {
     }
     console.log('Month diff: ' + cMonth, id);
     return compuscan;
+}
+
+async function insertCustomerAnswers(params) {
+    // validate    
+    dbTruId.collection('compuscanAnswerSaves').insertOne(params, function (
+        err,
+        info
+      ) {
+        params
+        
+      })
+
+
+
+    //const compuscan = new db.Compuscan(params);
+    
+    // save compuscan report
+    //await compuscan.save();
+
+    return params;
 }
