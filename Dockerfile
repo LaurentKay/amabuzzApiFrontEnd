@@ -4,6 +4,6 @@
  COPY . .
  RUN yarn install --production
  RUN yarn add nodemon
- EXPOSE 4000
+ EXPOSE 443
 
  CMD ["node", "server.js"]
