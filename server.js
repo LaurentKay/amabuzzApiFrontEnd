@@ -52,7 +52,7 @@ app.use('/api-docs', require('_helpers/swagger'));
 
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 443;
 
-app.listen(port, '0.0.0.0', () => {
+app.listen(port, () => {
     console.log('Server listening on port ' + port);
 });
 const http = require("http").Server(app)
