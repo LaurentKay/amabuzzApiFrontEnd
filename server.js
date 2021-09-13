@@ -12,7 +12,7 @@ const options = {
   cert: fs.readFileSync('cert.pem'),
   app
 }
-const server = require('https').createServer(app);
+const server = require('https').createServer(options);
 
 // app.use(express.json({limit: '50mb'}));
 // app.use(express.urlencoded({limit: '50mb'}));
