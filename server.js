@@ -7,12 +7,12 @@ const cors = require('cors');
 const errorHandler = require('_middleware/error-handler');
 const fileUpload = require('express-fileupload');
 const fs = require("fs");
-// const options = {
-//   key: fs.readFileSync('key.pem'),
-//   cert: fs.readFileSync('cert.pem'),
-//   app
-// }
-//const server = require('http').createServer(app);
+const options = {
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem'),
+  app
+}
+const server = require('https').createServer(app);
 
 // app.use(express.json({limit: '50mb'}));
 // app.use(express.urlencoded({limit: '50mb'}));
@@ -59,10 +59,10 @@ app.use('/api-docs', require('_helpers/swagger'));
 const port = process.env.PORT || 443; //process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 443;
 
 
-const http = require("http").Server(app)
-const io = require("socket.io")(http)
+//const http = require("http").Server(app)
+const io = require("socket.io")(server)
 
-http.listen(port, () => {
+server.listen(port, () => {
   console.log('Server listening on port ' + port);
 });
 
