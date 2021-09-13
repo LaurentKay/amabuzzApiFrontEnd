@@ -7,12 +7,12 @@ const cors = require('cors');
 const errorHandler = require('_middleware/error-handler');
 const fileUpload = require('express-fileupload');
 const fs = require("fs");
-const options = {
-  key: fs.readFileSync('key.pem'),
-  cert: fs.readFileSync('cert.pem'),
-  app
-}
-const server = require('https').createServer(options);
+// const options = {
+//   key: fs.readFileSync('key.pem'),
+//   cert: fs.readFileSync('cert.pem'),
+//   app
+// }
+const server = require('http').createServer(app);
 
 // app.use(express.json({limit: '50mb'}));
 // app.use(express.urlencoded({limit: '50mb'}));
