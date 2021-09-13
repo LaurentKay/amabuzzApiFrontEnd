@@ -12,7 +12,7 @@ const options = {
   cert: fs.readFileSync('cert.pem'),
   app
 }
-const server = require('http').createServer(app);
+//const server = require('http').createServer(app);
 
 // app.use(express.json({limit: '50mb'}));
 // app.use(express.urlencoded({limit: '50mb'}));
@@ -58,11 +58,13 @@ app.use('/api-docs', require('_helpers/swagger'));
 
 const port = process.env.PORT || 443; //process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 443;
 
-app.listen(port, () => {
-    console.log('Server listening on port ' + port);
-});
+
 const http = require("http").Server(app)
 const io = require("socket.io")(http)
+
+http.listen(port, () => {
+  console.log('Server listening on port ' + port);
+});
 
 const activeUsers = new Set();
 io.on('connection', (socket) => {
