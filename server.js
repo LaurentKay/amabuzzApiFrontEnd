@@ -56,7 +56,7 @@ app.use('/api-docs', require('_helpers/swagger'));
 
 // start server
 
-const port = process.env.PORT || 443; //process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 443;
+const port = process.env.PORT || 3000; //process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 443;
 
 
 //const http = require("http").Server(app)
