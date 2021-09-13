@@ -77,11 +77,11 @@ io.on('connection', (socket) => {
       app.use('/truidAmabuzzHook', require('./truID/truID.controller'));
  
 });
-app.use(function(request, response, next) {
+/*app.use(function(request, response, next) {
 
   if (process.env.NODE_ENV != 'development' && !request.secure) {
      return response.redirect("https://" + request.headers.host + request.url);
   }
 
   next();
-})
+})*/
