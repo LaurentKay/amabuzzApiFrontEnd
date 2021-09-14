@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const errorHandler = require('_middleware/error-handler');
 const fileUpload = require('express-fileupload');
-const fs = require("fs");
+//const fs = require("fs");
 // const options = {
 //   key: fs.readFileSync('key.pem'),
 //   cert: fs.readFileSync('cert.pem'),
@@ -60,28 +60,20 @@ const port = process.env.PORT || 3000; //process.env.NODE_ENV === 'production' ?
 
 
 //const http = require("http").Server(app)
-const io = require("socket.io")(server)
+//const io = require("socket.io")(server)
 
 server.listen(port, () => {
   console.log('Server listening on port ' + port);
 });
 
-const activeUsers = new Set();
-io.on('connection', (socket) => {
-    console.log('io io its off to work i go')
-    socket.on("new_user", function (data) {
-        socket.userId = data;
-        activeUsers.add(data);
-        io.emit("new_user", [...activeUsers]);
-      });
-      app.use('/truidAmabuzzHook', require('./truID/truID.controller'));
+// const activeUsers = new Set();
+// io.on('connection', (socket) => {
+//     console.log('io io its off to work i go')
+//     socket.on("new_user", function (data) {
+//         socket.userId = data;
+//         activeUsers.add(data);
+//         io.emit("new_user", [...activeUsers]);
+//       });
+//       app.use('/truidAmabuzzHook', require('./truID/truID.controller'));
  
-});
-/*app.use(function(request, response, next) {
-
-  if (process.env.NODE_ENV != 'development' && !request.secure) {
-     return response.redirect("https://" + request.headers.host + request.url);
-  }
-
-  next();
-})*/
+// });
