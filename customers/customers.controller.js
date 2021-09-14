@@ -13,7 +13,7 @@ const updateAssessment = (req, res, next) => {
     //     return res.status(401).json({ message: 'Unauthorized' });
     // }
     customerService.updateAssessment(req.params.customerId, req.body)
-      .then(customer => res.json(customer))
+      .then(customer => res.status(200).json(customer))
       .catch(next);
 }
 // routes
@@ -148,7 +148,7 @@ function authenticate(req, res, next) {
     .then(({ account, jwtToken,custRet }) => {
       //setTokenCookie(res, refreshToken);
       //console.log('=>: ', account);
-      res.json({account, custRet});
+      res.status(200).json({account, custRet});
     })
     .catch(next);
 }
@@ -249,7 +249,7 @@ function uploads(req, res, next){
     //console.log(uploadedDocs);
 
     customerService.updateCustDoc(req.body.idNumber, uploadedDocs)
-        .then(customer => res.json(customer))
+        .then(customer => res.status(200).json(customer))
         .catch(next);
     //res.send('File(s) uploaded');
 }
@@ -299,7 +299,7 @@ function createCustomerSchema(req, res, next){
 
 function createCustomer(req, res, next) {
   customerService.createCustomer(req.body)
-    .then(customer => res.json(customer))
+    .then(customer => res.status(200).json(customer))
     .catch(next);
 }
 
@@ -390,7 +390,7 @@ function createSchema(req, res, next) {
 
 function create(req, res, next) {
   customerService.create(req.body)
-    .then(customer => res.json(customer))
+    .then(customer => res.status(200).json(customer))
     .catch(next);
 }
 
@@ -463,7 +463,7 @@ function update(req, res, next) {
   // }
 
   customerService.update(req.params.id, req.body)
-    .then(customer => res.json(customer))
+    .then(customer => res.status(200).json(customer))
     .catch(next);
 }
 

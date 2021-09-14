@@ -150,7 +150,7 @@ async function getReport(req, res, next){ //Identity_number, Surname, Forename, 
         });
     }else{
       console.log('2222222')
-        res.send(compuscan);
+        res.status(200).send(compuscan);
     }
     //return ret;
 }
@@ -508,21 +508,21 @@ function getById(req, res, next) {
     console.log('PreviousCompscan', previousCompuscan);
 
     compuscanService.getById(req.params.id)
-        .then(compuscan => compuscan ? res.json(compuscan) : res.sendStatus(404))
+        .then(compuscan => compuscan ? res.status(200).json(compuscan) : res.sendStatus(404))
         .catch(next);
 }
 
 function create(req, res, next){
 
     compuscanService.create(req.body)
-        .then(compuscan =>res.send(compuscan))
+        .then(compuscan =>res.status(200).send(compuscan))
         .catch(next);
 }
 
 function createHistory(req, res, next){
     console.log(req.body)
     compuscanService.createHistory(req.body)
-        .then(compuscanHistory =>res.send(compuscanHistory))
+        .then(compuscanHistory =>res.status(200).send(compuscanHistory))
         .catch(next);
 }
 
@@ -538,7 +538,7 @@ function getReportFromDB(req, res, next)
 
         //console.log('This is createDate:: ', resultObject.createDate);
 
-        res.json(result);
+        res.status(200).json(result);
       })
         // .then(compuscan => compuscan ? res.json(compuscan) : res.sendStatus(404))
         // .then((res) => {
@@ -551,7 +551,7 @@ function getReportFromDB(req, res, next)
 function insertCustomerAnswers(req, res, next){
     console.log(req.body)
     compuscanService.insertCustomerAnswers(req.body)
-        .then(compuscan =>res.send(compuscan))
+        .then(compuscan =>res.status(200).send(compuscan))
         .catch(next);
 }
 
