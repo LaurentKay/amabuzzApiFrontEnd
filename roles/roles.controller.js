@@ -28,7 +28,7 @@ function _getAllRoles(req, res, next) {
 
 function insert(req, res, next) {
   roleService.create(req.body)
-    .then(aData => res.send(aData))
+    .then(aData => res.status(200).send(aData))
     .catch(next);
 }
 
@@ -44,6 +44,6 @@ function createSchema(req, res, next) {
 function _createRoles(req, res, next) {
   console.log('--->')
   roleService.create(req.body)
-    .then(aData => res.json(aData))
+    .then(aData => res.status(200).json(aData))
     .catch(next);
 }

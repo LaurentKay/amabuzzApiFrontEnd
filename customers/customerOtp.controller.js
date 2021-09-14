@@ -27,11 +27,11 @@ async function getSendOtp(req, res, next){
                 customerOtpservice.update(req.body.RSAIDNumber, SMSSentID);
                 res.send({OTP:OTP, message:'sent'});
             }else{
-                res.send({OTP:'', message:'There was an error sending your One Time Pin code, please try again.'});
+                res.status(200).send({OTP:'', message:'There was an error sending your One Time Pin code, please try again.'});
             }
         }catch(e){
             console.log('Error: ', e.message);
-            res.send({OTP:'', message:e.message});
+            res.status(401).send({OTP:'', message:e.message});
         }
     // }else{
     //    res.send({OTP:'', message:'We have received too many OTP request for this number'}) 

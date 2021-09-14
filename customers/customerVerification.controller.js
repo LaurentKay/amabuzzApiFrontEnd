@@ -20,7 +20,7 @@ router.post('/getCustomerCompuscanAnswers', getCustomerCompuscanAnswers);
 
 function getAllCustomerVerificationQuestions(req, res, next) {
     customerVerificationService.getAllCustomerVerificationQuestions()
-        .then(customerVerificationQuestions => res.json(customerVerificationQuestions))
+        .then(customerVerificationQuestions => res.status(200).json(customerVerificationQuestions))
         .catch(next);
 }
 
@@ -28,14 +28,14 @@ function getAllCustomerVerificationQuestions(req, res, next) {
 function getCustomerVerificationQuestions(req, res, next)
 {
    customerVerificationService.getCustomerVerificationQuestions(req.body)
-  .then(customerVerificationQuestions => customerVerificationQuestions ? res.json(customerVerificationQuestions) : res.sendStatus(404))
+  .then(customerVerificationQuestions => customerVerificationQuestions ? res.status(200).json(customerVerificationQuestions) : res.sendStatus(404))
   .catch(next);
 }
 
 function getCustomerCompuscanAnswers(req, res, next)
 {
    customerVerificationService.getCustomerCompuscanAnswers(req.body)
-  .then(customerVerificationQuestions => customerVerificationQuestions ? res.json(customerVerificationQuestions) : res.sendStatus(404))
+  .then(customerVerificationQuestions => customerVerificationQuestions ? res.status(200).json(customerVerificationQuestions) : res.sendStatus(404))
   .catch(next);
 }
 

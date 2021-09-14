@@ -20,13 +20,13 @@ module.exports = router;
 function getAll(req, res, next) {
     //console.log('THis one');
     affordabilityQuestionsService.getAllAffordabilityQuestions()
-       .then(AffordabilityQuestions => res.json(AffordabilityQuestions))
+       .then(AffordabilityQuestions => res.status(200).json(AffordabilityQuestions))
        .catch(next);
 }
 
 function insert(req, res, next){
     affordabilityQuestionsService.createAffordabilityQuestions(req.body)
-        .then(affordabilityQuestions =>res.send(affordabilityQuestions))
+        .then(affordabilityQuestions =>res.status(200).send(affordabilityQuestions))
         .catch(next);
   }
 
@@ -74,7 +74,7 @@ function updateSchema(req, res, next) {
 function create(req, res, next) {
     
     affordabilityQuestionsService.create(req.body)
-    .then(affordabilityQuestions => res.json(affordabilityQuestions))
+    .then(affordabilityQuestions => res.status(200).json(affordabilityQuestions))
     .catch(next);
 }
 
@@ -85,7 +85,7 @@ function update(req, res, next) {
     }
   
     affordabilityQuestionsService.update(req.params.id, req.body)
-      .then(affordabilityQuestions => res.json(affordabilityQuestions))
+      .then(affordabilityQuestions => res.status(200).json(affordabilityQuestions))
       .catch(next);
   }
 
@@ -96,6 +96,6 @@ function update(req, res, next) {
   }
 
   affordabilityQuestionsService.delete(req.params.id)
-    .then(() => res.json({ message: 'Affordability question deleted successfully' }))
+    .then(() => res.status(200).json({ message: 'Affordability question deleted successfully' }))
     .catch(next);
 }

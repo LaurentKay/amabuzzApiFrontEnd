@@ -30,13 +30,13 @@ module.exports = router;
 function _getAllPools(req, res, next) {
   console.log('THis one here');
   configService.getAllPools()
-   .then(pools => res.json(pools))
+   .then(pools => res.status(200).json(pools))
    .catch(next);
 }
 
 function insert(req, res, next) {
   configService.create(req.body)
-    .then(pools => res.send(pools))
+    .then(pools => res.status(200).send(pools))
     .catch(next);
 }
 
@@ -51,7 +51,7 @@ function createSchema(req, res, next) {
 
 function _createPools(req, res, next) {
   configService.create(req.body)
-    .then(pools => res.json(pools))
+    .then(pools => res.status(200).json(pools))
     .catch(next);
 }
 
@@ -62,7 +62,7 @@ function _deletePools(req, res, next) {
   }
 
   configService.deletePools(req.params.id)
-    .then(() => res.json({ message: 'Pool deleted successfully' }))
+    .then(() => res.status(200).json({ message: 'Pool deleted successfully' }))
     .catch(next);
 }
 // -----------------------------------------------------------------------------
@@ -71,13 +71,13 @@ function _deletePools(req, res, next) {
 function _getAllWorkflowNames(req, res, next) {
   console.log('THis one here');
   configService.getAllWorkflowNames()
-   .then(workflownames => res.json(workflownames))
+   .then(workflownames => res.status(200).json(workflownames))
    .catch(next);
 }
 
 function insert(req, res, next) {
   configService.create(req.body)
-    .then(workflowNames => res.send(workflowNames))
+    .then(workflowNames => res.status(200).send(workflowNames))
     .catch(next);
 }
 
@@ -92,7 +92,7 @@ function createSchemaWorkflowName(req, res, next) {
 
 function _createworkflowNames(req, res, next) {
   configService.createWorkFlowNames(req.body)
-    .then(workflowNames => res.json(workflowNames))
+    .then(workflowNames => res.status(200).json(workflowNames))
     .catch(next);
 }
 
@@ -103,7 +103,7 @@ function _deleteWorkflownames(req, res, next) {
   }
 
   configService.deleteWorkflowName(req.params.id)
-    .then(() => res.json({ message: 'Workflow Name deleted successfully' }))
+    .then(() => res.status(200).json({ message: 'Workflow Name deleted successfully' }))
     .catch(next);
 }
 // -----------------------------------------------------------------------------
@@ -112,13 +112,13 @@ function _deleteWorkflownames(req, res, next) {
 function _getAllWorkflows(req, res, next) {
   console.log('THis one here');
   configService.getAllWorkflows()
-   .then(workflows => res.json(workflows))
+   .then(workflows => res.status(200).json(workflows))
    .catch(next);
 }
 
 function insert(req, res, next) {
   configService.create(req.body)
-    .then(workflows => res.send(workflows))
+    .then(workflows => res.status(200).send(workflows))
     .catch(next);
 }
 
@@ -142,7 +142,7 @@ function createSchemaWorkflow(req, res, next) {
 
 function _createWorkflow(req, res, next) {
   configService.createWorkFlow(req.body)
-    .then(workflows => res.json(workflows))
+    .then(workflows => res.status(200).json(workflows))
     .catch(next);
 }
 
@@ -188,7 +188,7 @@ function _updateWorkflow(req, res, next) {
     }
 
     configService.update(req.params.id, req.body)
-      .then(workflow => res.json(workflow))
+      .then(workflow => res.status(200).json(workflow))
       .catch(next);
 }
 _updateWorkflow

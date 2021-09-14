@@ -18,6 +18,6 @@ function getAll(req, res, next) {
   questionsService.getAllQuestions(id)
     .then((questions) => {
       let result = [questions[0], questions.c_questions]
-      res.json(result)
+      res.status(200).json(result)
     }).catch(next);
 }
