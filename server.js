@@ -36,7 +36,9 @@ app.use(fileUpload({
 //app.use('/accounts', require('./accounts/accounts.controller'));
 //app.use('/products', require('./products/products.controller'));
 //app.use('/orders', require('./orders/orders.controller'));
-
+app.get('/', (req, res, next) =>{
+  res.status(200).send('I am alive');
+});
 app.use('/customers', require('./customers/customers.controller'));
 //app.use('/loans', require('./loans/loans.controller'));
 app.use('/compuscan', require('./compuscan/compuscan.controller'));
