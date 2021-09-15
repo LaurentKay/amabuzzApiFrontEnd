@@ -84,6 +84,8 @@ const schema = new Schema({
     employerContactNumber: {type:String},
     salaryDay:{type:String},
     yearEmployed:{type:Number},
+    monthEmployed: {type:Number},
+    occupation: {type:String},
     salaryFrequency:{type:String},
     employmentNumber:{type:String},
     bankName:{type: String, required: true },

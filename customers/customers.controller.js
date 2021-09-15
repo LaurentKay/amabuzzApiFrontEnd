@@ -335,6 +335,8 @@ function createSchema(req, res, next) {
         employerAddressCity: Joi.string(),
         salaryDay: Joi.string(),
         yearEmployed: Joi.number(),
+        monthEmployed: Joi.number(),
+        occupation: Joi.string(),
         salaryFrequency: Joi.string(),
         employmentNumber: Joi.string(),
         employerAddressPostalCode: Joi.string(),
@@ -381,6 +383,8 @@ function createSchema(req, res, next) {
     req.body.employerContactNumber = req.body.employerContactNumber ? req.body.employerContactNumber : 'Incomplete';
     req.body.salaryDay = req.body.salaryDay ? req.body.salaryDay : 'Incomplete';
     req.body.yearEmployed = req.body.yearEmployed ? req.body.yearEmployed : 0;
+    req.body.monthEmployed = req.body.monthEmployed? req.body.monthEmployed : 0;
+    req.occupation = req.body.occupation ? req.body.occupation : 'Incomplete';
     req.body.salaryFrequency = req.body.salaryFrequency ? req.body.salaryFrequency : 'Incomplete';
     req.body.employmentNumber = req.body.employmentNumber ? req.body.employmentNumber : 'Incomplete';
     req.body.applicationStatus = req.body.applicationStatus ? req.body.applicationStatus : '';
@@ -422,6 +426,8 @@ function updateSchema(req, res, next) {
         employerAddressCity: Joi.string(),
         salaryDay: Joi.string(),
         yearEmployed: Joi.number(),
+        monthEmployed: Joi.number(),
+        occupation: Joi.string(),
         salaryFrequency: Joi.string(),
         employmentNumber: Joi.string(),
         employerAddressPostalCode: Joi.string(),
