@@ -50,7 +50,9 @@ app.use('/truID', require('./truID/truID.controller'));
 app.use('/customers', require('./customers/customerOtp.controller'));
 // swagger docs route
 app.use('/api-docs', require('_helpers/swagger'));
-
+app.use('/', (req, res, next) =>{
+  res.status(200).send('I am alive');
+})
 // global error handler
 // app.use(errorHandler);
 
