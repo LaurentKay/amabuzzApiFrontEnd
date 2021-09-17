@@ -71,5 +71,5 @@ const schema = Joi.object().keys({
 })
 
 const xx = schema.validate(kak)
-    console.log(xx)
+    
 

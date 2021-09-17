@@ -883,5 +883,5 @@ const schema1 = Joi.object({
 
 
 const xx = schema.validate(compuScan);
-    console.log(xx);
+    
 

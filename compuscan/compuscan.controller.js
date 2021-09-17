@@ -33,7 +33,7 @@ async function getReport(req, res, next){ //Identity_number, Surname, Forename, 
     //let first check if there is an recent report
     const compuscan = await compuscanService.getReportFromDB(Identity_number);
     if(!compuscan){
-      console.log('1111111')
+      
         let ret;
         //Check the db first, how old the is the entry
 
@@ -79,7 +79,7 @@ async function getReport(req, res, next){ //Identity_number, Surname, Forename, 
                             if (err) {
                                 console.log(err);
                             }
-                            console.log('done');
+                            
                             //Save to db
                             irt.ROOT['customerId'] = Identity_number;
                             irt.ROOT['customerName'] = Forename;
@@ -93,7 +93,7 @@ async function getReport(req, res, next){ //Identity_number, Surname, Forename, 
                             if(!isAr){
                                 reason = [reason.reason];
                                 irt.ROOT.CODIX.PRODUCTS.product.reasons.reason = reason;
-                                console.log('reason: ', reason);
+                                
                             }
                             if(irt.ROOT.EnqCC_ADDRESS?.ROW){
                                 let address = irt.ROOT.EnqCC_ADDRESS.ROW;
@@ -149,7 +149,7 @@ async function getReport(req, res, next){ //Identity_number, Surname, Forename, 
             });
         });
     }else{
-      console.log('2222222')
+      
         res.status(200).send(compuscan);
     }
     //return ret;

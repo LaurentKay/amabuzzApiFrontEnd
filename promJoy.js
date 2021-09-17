@@ -52,4 +52,4 @@ const finalSchema = Joi.object().keys({
 });
 
 const xx = finalSchema.validate(promSchema)
-    console.log(xx)
+    

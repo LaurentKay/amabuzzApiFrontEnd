@@ -5,7 +5,7 @@ const db = require('_helpers/db');
 module.exports = authorize;
 
 function authorize(roles = []) {
-    console.log('where we at nigga', secret)
+    
     // roles param can be a single role string (e.g. Role.User or 'User') 
     // or an array of roles (e.g. [Role.Admin, Role.User] or ['Admin', 'User'])
     if (typeof roles === 'string') {
@@ -18,13 +18,13 @@ function authorize(roles = []) {
 
         // authorize based on user role
         async (req, res, next) => {
-            console.log(req.user)
+            
             const account = await db.Account.findById(req.user.id);
             const refreshTokens = await db.RefreshToken.find({ account: account.id });
-            console.log('where we at nigga', account)
+            
             if (!account || (roles.length && !roles.includes(account.role))) {
                 // account no longer exists or role not authorized
-                return res.status(401).json({ message: 'Unauthorized yu ffoo' });
+                return res.status(401).json({ message: 'Unauthorized' });
             }
 
             // authentication and authorization successful

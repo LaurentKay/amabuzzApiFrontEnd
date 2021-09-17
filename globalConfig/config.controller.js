@@ -28,7 +28,7 @@ module.exports = router;
 // POOLS NAMES
 // -----------------------------------------------------------------------------
 function _getAllPools(req, res, next) {
-  console.log('THis one here');
+  
   configService.getAllPools()
    .then(pools => res.status(200).json(pools))
    .catch(next);
@@ -69,7 +69,7 @@ function _deletePools(req, res, next) {
 // WORKFLOWS NAMES
 // -----------------------------------------------------------------------------
 function _getAllWorkflowNames(req, res, next) {
-  console.log('THis one here');
+  
   configService.getAllWorkflowNames()
    .then(workflownames => res.status(200).json(workflownames))
    .catch(next);
@@ -110,7 +110,7 @@ function _deleteWorkflownames(req, res, next) {
 // ASSIGN WORKFLOWS
 // -----------------------------------------------------------------------------
 function _getAllWorkflows(req, res, next) {
-  console.log('THis one here');
+  
   configService.getAllWorkflows()
    .then(workflows => res.status(200).json(workflows))
    .catch(next);

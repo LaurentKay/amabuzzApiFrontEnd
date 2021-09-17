@@ -61,7 +61,7 @@ async function getPayHistory(){
         //console.log(g);
         return g.recordset;
     } catch  (errr) {
-        console.log("ABC: ", errr);
+        
         //res.send({DebitOrderFileRef:'load file on ccs first'});
     }
     // sql.connect(configMSSQLLive, function(err){
