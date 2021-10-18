@@ -81,21 +81,29 @@ async function getReportFromDB(id) {
 }
 
 async function insertCustomerAnswers(params) {
-    // validate    
-    dbTruId.collection('compuscanAnswerSaves').insertOne(params, function (
-        err,
-        info
-      ) {
-        params
-        
-      })
+    const compAns = dbTruId.collection('compuscanAnswerSaves').findOne({"applicationReference":params.applicationReference});
+    if(!compAns){
+        // validate    
+        dbTruId.collection('compuscanAnswerSaves').insertOne(params, function (
+            err,
+            info
+        ) {
+            params
+            
+        });
+        return params;
+    }else{
+        const filter = {"applicationReference":params.applicationReference};
+        const upAns = {
+            $set:{
+                telephoneNumbers:params.telephoneNumbers,
+                employers:params.employers,
+                addresses:params.addresses,
+                accounts:params.accounts
+            }
+        };
+        const result = await dbTruId.collection('compuscanAnswerSaves').updateOne(filter, upAns);
+        return result;
+    }
 
-
-
-    //const compuscan = new db.Compuscan(params);
-    
-    // save compuscan report
-    //await compuscan.save();
-
-    return params;
 }

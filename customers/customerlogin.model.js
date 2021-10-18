@@ -9,6 +9,7 @@ const schema =Schema({
     mobileNumber: { type: String, required: true },
     emailAddress: {type: String, required: true },
     customerPassword:{type: String},
+    pwdrestCode: {type: String},
     createDate: {type : Date, default: Date.now }
 });
 

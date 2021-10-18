@@ -33,7 +33,10 @@ module.exports = {
     calculateAffordability,
     authenticate,
     createCustomer,
-    getApplicantSigedContract
+    getApplicantSigedContract,
+    getLoginById,
+    upLoginById,
+    resetPassword
 };
 
 function basicDetails(customer) {
@@ -60,13 +63,13 @@ function addCreditScore(customer){
     return newcustomer;
 }
 
-function insertSignature(customerSignature)
-{
-    const {_id, CustomerIDnumber, signature, dateSigned, IPAddress} = customerSignature;
-    const  newcustomerSignature = { _id, CustomerIDnumber, signature, dateSigned, IPAddress};
-    //console.log(newcustomerSignature);
-    return newcustomerSignature;
-}
+// function insertSignature(customerSignature)
+// {
+//     const {_id, CustomerIDnumber, signature, dateSigned, IPAddress} = customerSignature;
+//     const  newcustomerSignature = { _id, CustomerIDnumber, signature, dateSigned, IPAddress};
+//     //console.log(newcustomerSignature);
+//     return newcustomerSignature;
+// }
 
 async function getAll() {
     const ccsCustomers = CCSarr; //await ccsService.getPayHistory();
@@ -177,7 +180,40 @@ async function createCustomer(params) {
 
     return {message:'Successfully registered, please proceed to login'};// basicDetails(customer);
 }
-
+async function getLoginById(RSAIDNumber){
+    let customer = await db.CustomerLogin.findOne({"RSAIDNumber":RSAIDNumber});
+    if(!customer){
+        throw 'Customer: ' + RSAIDNumber + ' , not details found ';
+    }
+    return customer;
+}
+async function upLoginById(id, pwdrestCode){
+    const CustomerLogin = await db.CustomerLogin.findOne({"RSAIDNumber":id});
+    //Object.assign(CustomerLogin, pwdrestCode);
+    //await CustomerLogin.save();
+    
+    const filter = {"RSAIDNumber":id};
+    const upCust = {
+        $set:{
+            pwdrestCode:pwdrestCode
+        }
+    }
+    const result = await db.CustomerLogin.updateOne(filter, upCust);
+    //console.log('The result: ', result);
+    return result;
+}
+async function resetPassword(dataReset){
+    const CustomerLogin = await db.CustomerLogin.findOne({"RSAIDNumber" : dataReset.RSAIDNumber});
+    const filter = {"RSAIDNumber" : dataReset.RSAIDNumber, pwdrestCode: dataReset.code};
+    const upCust = {
+        $set:{
+            customerPassword:hash(dataReset.password)
+        }
+    }
+    const result = await db.CustomerLogin.updateOne(filter, upCust);
+    //console.log('The resetpwd: ', result);
+    return result;
+}
 async function update(id, params) {
     const customer = await getCustomer(id);
 
@@ -237,11 +273,26 @@ async function createHistory(params) {
 
 async function insertSignature(params) {
 
-    const customerSignature = new db.CustomerSignature(params);
+    const existingCust = db.CustomerSignature.findOne({"CustomerIDnumber":params.CustomerIDnumber, "CustomerUUID":params.CustomerUUID});
+    //console.log('New sig: ', params, existingCust);
+    if(!existingCust){
+        //console.log('In If: ', params);
+        const customerSignature = new db.CustomerSignature(params);
 
-    await customerSignature.save();
+        await customerSignature.save();
 
-    return customerSignature;
+        return customerSignature;
+    }else{
+        //console.log('In Else: ', params);
+        const filter = {"CustomerIDnumber": params.CustomerIDnumber}
+        const upSignature = {
+            $set:{
+                CustomerContract:params.CustomerContract
+            }
+        }
+        const result = await db.CustomerSignature.updateOne(filter, upSignature);
+        return result;
+    }
   }
 async function authenticate({ RSAIDNumber, customerPassword, ipAddress }) {
     const custRet = await db.CustomerLogin.findOne({ RSAIDNumber });

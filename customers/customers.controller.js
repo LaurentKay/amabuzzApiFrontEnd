@@ -7,6 +7,7 @@ const Role = require('_helpers/role');
 //const accountService = require('../accounts/account.service');
 const customerService = require('./customers.service');
 const fs = require('fs');
+const nodemailer = require('nodemailer');
 
 const updateAssessment = (req, res, next) => {
     // if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
@@ -24,7 +25,8 @@ router.post('/uploads', uploads);
 router.post('/',  createSchema, create); //authorize(),
 router.put('/:id',  updateSchema, update); //authorize(),
 router.put('/affordability/:customerId', updateAssemssmentSchema, updateAssessment); //authorize(),
-
+router.post('/sendpassword', sendResetLink);
+router.post('/resetpassword', resetPassword);
 //router.post('/insertHistory',  createHistory); //
 router.post('/insertSignature', insertSignature);
 //router.get('/contract/:id', getSigedContract)
@@ -69,7 +71,7 @@ function updateAssemssmentSchema (req, res, next) {
     expenseAccomodation: Joi.number(),
     expenseTransport: Joi.number(),
     expenseFood: Joi.number(),
-    expsenseEducation: Joi.number(),
+    expenseEducation: Joi.number(),
     expenseMedical: Joi.number(),
     expenseUtilities: Joi.number(),
     expenseMaintenance: Joi.number(),
@@ -86,14 +88,6 @@ function updateAssemssmentSchema (req, res, next) {
     incomemonthlyFixedSalary: Joi.number(),
     incomemonthlyOtherIncome: Joi.number(),
     incomemonthlyOvertime: Joi.number(),
-    expenseAccomodation: Joi.number(),
-    expenseEducation: Joi.number(),
-    expenseFood: Joi.number(),
-    expenseMaintenance: Joi.number(),
-    expenseMedical: Joi.number(),
-    expenseRent: Joi.number(),
-    expenseTransport: Joi.number(),
-    expenseUtilities: Joi.number(),
     installMent: Joi.number(),
     loan1: Joi.number(),
     loanTerms: Joi.number(),
@@ -275,7 +269,91 @@ function getById(req, res, next) {
     .then(customer => customer ? res.json(customer) : res.sendStatus(404))
     .catch(next);
 }
-
+async function resetPassword(req, res, next){
+  try{
+    const ret = await customerService.resetPassword(req.body);
+    if(ret.ok){
+      res.status(200).send({message:'Password updated successfully'});
+    }else{
+      res.status(201).send({message:'There was an error updating your password, please try again later'});
+    }
+  }catch(e){
+    res.status(201).send({message:'Unable to reset your password, please try again later'});
+  }
+}
+async function sendResetLink(req, res, next){
+  //console.log('The ID: ', req.body);
+  try{
+      const customer = await customerService.getLoginById(req.body.RSAIDNumber);
+      if(customer){
+        const str='123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const pwdrestCode=shuffle(str).substr(0, 12); 
+        const ret = await customerService.upLoginById(req.body.RSAIDNumber, pwdrestCode);   
+        if(ret.ok){ 
+            const message = `
+                <h2>Password Reset</h2>
+                <p>Your Account:</p>
+                <p>Email: ${customer.emailAddress}</p>
+                <p>Please click the link below to reset your password.</p>
+                <a href='http://localhost:3000/reset-password?code=${pwdrestCode}&user=${customer.RSAIDNumber}'>Reset Password</a>
+                `;
+                const subject = "'Amabuzz System Password Reset'";
+                sendNotification(message, subject, customer.emailAddress, res);
+                //next();
+          }else{
+            res.status(201).send({message:'There was an error reseting your password, please try again later'});
+          }
+      }else{
+        res.status(201).send({message:'Customer details could not be located'});
+      }
+  }catch(e){
+    //console.log('An Error? ', e);
+    res.status(201).send({message:e});
+  }
+}
+function shuffle(str) {
+  var parts = str.split('');
+  for (var i = parts.length; i > 0;) {
+      var random = parseInt(Math.random() * i);
+      var temp = parts[--i];
+      parts[i] = parts[random];
+      parts[random] = temp;
+  }
+  return parts.join('');
+}
+function sendNotification(body, subject, email, res){
+  //console.log("The email: ", req.body);
+  let testAccount = nodemailer.createTestAccount();
+  let transporter = nodemailer.createTransport({
+      host: 'mail.ecquatorial.com', //'smtp.gmail.com',
+      port:465,
+      auth: {
+          user:'sales@ecquatorial.com', //'laurentkayembe@gmail.com',
+          pass:'7$jG!(x2Eptm', //'Ka140E45'
+      }
+  });
+  
+  //const email = email;
+  //const message = req.body.message; Your email was submitted, we will come back to you shortly 
+  //const subject = subject;
+  const content = body;
+  var mail = {
+      from:'sales@ecquatorial.com',
+      to: email,
+      subject:subject,
+      html:content
+  }
+  let bsent = false;
+  transporter.sendMail(mail, (err, data) =>{
+      if(err){
+          //console.log('Mail Error: ', err);
+          res.status(201).send({message:'Unable to reset your password, please again later'});
+      }else{
+        //console.log('Mail data: ', data);
+        res.status(200).send({message:'A link to reset your password has been sent to you email'});
+      }
+  });
+}
 function calculateAffordability(req, res, next)
 {
   customerService.calculateAffordability(req.params.id)

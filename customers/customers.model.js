@@ -110,6 +110,7 @@ const schema = new Schema({
     verificationToken: String,
     verified: Date,
     createDate:{type:Date, default: Date.now},
+    applicationReferenceNumber:{type:String},
 });
 
 schema.virtual('isVerified').get(function () {
