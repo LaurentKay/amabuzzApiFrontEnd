@@ -45,8 +45,12 @@ async function getReport(id) {
 
 
 async function create(params) {
+    console.log('Create params? : ', params.ROOT);
     // validate    
-    const compuscan = new db.Compuscan(params);
+    // db.collection('compuscans').insertOne(params.ROOT, function(err, info){
+    //     params.ROOT
+    // });
+    const compuscan = new db.Compuscan(params.ROOT);
     
     // save compuscan report
     await compuscan.save();

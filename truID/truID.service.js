@@ -96,10 +96,53 @@ async function get90DayTransactions(customerData)
     };
 
     const resultData  = await axios(config)
-        console.log(resultData.data)
-        return resultData.headers.location;
+    console.log(resultData.data)
+    let collectionID = resultData.headers.location.replace('https://www.truidconnect.com/','');
+    linkApplicantToCustomerIDNumber(customerData, collectionID);
+    insertTransactions(resultData.data);
+    return resultData.headers.location;
 };
 
+function linkApplicantToCustomerIDNumber(data, collectionID)
+{
+    //collectionID = '8wdz1k6248qcy0o126phuft06';
+    //let downloadURL = '';
+    //console.log(JSON.stringify(data.idNumber))
+
+    /*
+    var config = {
+      method: 'get',
+      url: 'https://api.truidconnect.com/delivery-api/collections/'+collectionID+'/products',
+      headers: { 
+        'Accept': 'application/json', 
+        'X-API-KEY': '0360c7f508194384a2845e3f793351e5'
+      }
+    };
+    
+    axios(config)
+    .then(function (response) {
+      downloadURL = JSON.stringify(response.data[0].url);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  */
+
+  //console.log("insertCollection" + JSON.stringify(data) +" " + collectionID);
+    applicationCollection = {
+        "idNumber": JSON.stringify(data.idNumber),
+        "collectionID": collectionID
+    }
+
+
+  dbTruId.collection('applicantTruIdCollections').insertOne(applicationCollection, function (
+    err,
+    info
+  ) {
+    applicationCollection    
+  })
+
+}
 
 async function downloadTransactions(params)
   {

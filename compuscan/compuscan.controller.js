@@ -23,12 +23,14 @@ module.exports = router;
 
 async function getReport(req, res, next){ //Identity_number, Surname, Forename, DateOfBirth, Gender, res
     const pUsrnme ='29234-1';
-    const pPasswrd='juli@n';
-    const DateOfBirth = req.DateOfBirth || '19820914';
+    const pPasswrd='3)H_5+]d';
+    let yr = parseInt(req.body.Identity_number.substr(0,2)) <= 21 ? '20' : '19';
+    const DateOfBirth= yr+req.body.Identity_number.substr(0,6);
+    //const DateOfBirth = req.DateOfBirth || '19820914';
     const Identity_number =req.Identity_number || req.body.Identity_number || '8209147250087';
     const Surname = req.Surname || req.body.Surname || 'Doe';
     const Forename= req.Forename || req.body.Forename || 'John';
-    const Gender = req.Gender || 'M';
+    const Gender = parseInt(req.body.Identity_number.substr(6,1)) >=5 ? 'M' : 'F'//req.Gender || 'M';
 
     //let first check if there is an recent report
     const compuscan = await compuscanService.getReportFromDB(Identity_number);
@@ -85,7 +87,7 @@ async function getReport(req, res, next){ //Identity_number, Surname, Forename, 
                             irt.ROOT['customerName'] = Forename;
                             irt.ROOT['customerSurname'] = Surname;
                             irt.ROOT['createDate'] = new Date(); //.toLocaleDateString('en-ZA');
-                            req.body = irt;
+                           
                             //console.log(irt);
                             // console.log(irt.ROOT.CODIX.PRODUCTS.product.reasons);
                             let reason = irt.ROOT.CODIX.PRODUCTS.product.reasons;
@@ -135,7 +137,8 @@ async function getReport(req, res, next){ //Identity_number, Surname, Forename, 
                                     irt.ROOT.EnqCC_EMPLOYER.ROW = emp;
                                 }
                             }
-                            console.log('reason1: ', reason);
+                            req.body = irt;
+                            //console.log('Body? : ', req.body);
                             next();
                             });
                         });
@@ -513,7 +516,6 @@ function getById(req, res, next) {
 }
 
 function create(req, res, next){
-
     compuscanService.create(req.body)
         .then(compuscan =>res.status(200).send(compuscan))
         .catch(next);

@@ -109,6 +109,17 @@ const schema = new Schema({
     //creditScore:{type: String},
     verificationToken: String,
     verified: Date,
+    account:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Account'
+    },
+    EmploymentVerificationStatus:{type: String},
+    DocmentationVerificationStatus:{type: String},
+    AffordabilityVerificationStatus:{type: String},
+    FirstDebitOrderStatus:{type: String},
+    CreditReportStatus:{type: String},
+    CreditReportReason:{type: String},
+    applicationFailureReason:{type: String},
     createDate:{type:Date, default: Date.now},
     applicationReferenceNumber:{type:String},
 });

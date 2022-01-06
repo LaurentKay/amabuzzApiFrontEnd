@@ -231,8 +231,9 @@ async function updateCustDoc(id, uploadeDocs){
             uploadedDocs: uploadeDocs
         }
     }
+    //console.log('Doc 2 up >>>>>> ', uploadeDocs);
     const result = await  db.Customer.updateOne(filter, updateDoc);
-    return result; //result;
+    return result; 
 }
 async function updateAssessment(id, body) {
     const bodyAff = body; //[0];
@@ -298,7 +299,13 @@ async function authenticate({ RSAIDNumber, customerPassword, ipAddress }) {
     const custRet = await db.CustomerLogin.findOne({ RSAIDNumber });
     //console.log(custRet, customerPassword);
     if (!custRet  || !bcrypt.compareSync(customerPassword, custRet.customerPassword)) {
-        throw 'ID number or password is incorrect';
+        return {
+            message: 'ID number or password is incorrect',
+            account:{},
+            jwtToken: '',
+            custRet: {}
+        }
+        //throw 'ID number or password is incorrect';
     }
 
     // authentication successful so generate jwt and refresh tokens
@@ -314,6 +321,7 @@ async function authenticate({ RSAIDNumber, customerPassword, ipAddress }) {
     //     //
     // }
     return {
+        message:'',
         account,
         jwtToken,
         custRet

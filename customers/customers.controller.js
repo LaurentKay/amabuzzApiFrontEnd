@@ -139,10 +139,15 @@ function authenticate(req, res, next) {
   const { RSAIDNumber, customerPassword } = req.body;
   const ipAddress = req.ip;
   customerService.authenticate({ RSAIDNumber, customerPassword, ipAddress })
-    .then(({ account, jwtToken,custRet }) => {
-      //setTokenCookie(res, refreshToken);
-      //console.log('=>: ', account);
-      res.status(200).json({account, custRet});
+    .then(({ message, account, jwtToken,custRet }) => {
+      if(message === ''){
+        //setTokenCookie(res, refreshToken);
+        //console.log('=>: ', account);
+        res.status(200).json({account, custRet});
+      }else{
+        res.status(201).json({message});
+      }
+      
     })
     .catch(next);
 }
@@ -338,7 +343,7 @@ function sendNotification(body, subject, email, res){
   //const subject = subject;
   const content = body;
   var mail = {
-      from:'sales@ecquatorial.com',
+      from:'Laurent.Kayembe@intellicell.co.za',
       to: email,
       subject:subject,
       html:content
@@ -436,7 +441,9 @@ function createSchema(req, res, next) {
         role: Joi.string().valid(Role.Admin, Role.User, Role.Customer).required(),
         creditScore:Joi.string(),
         applicationStatus:Joi.string().allow(null, ''),
-        uploadedDocs:uploadedDocsSchema
+        uploadedDocs:uploadedDocsSchema,
+        EmploymentVerificationStatus:Joi.string().allow(null, ''),
+        CreditReportStatus:Joi.string().allow(null, '')
     });
     //In case data is comming from the web form these field will not be available  Assessment
     req.body.homeAddress1 = req.body.homeAddress1 ? req.body.homeAddress1 : 'Incomplete';
@@ -463,9 +470,20 @@ function createSchema(req, res, next) {
     req.body.yearEmployed = req.body.yearEmployed ? req.body.yearEmployed : 0;
     req.body.monthEmployed = req.body.monthEmployed? req.body.monthEmployed : 0;
     req.occupation = req.body.occupation ? req.body.occupation : 'Incomplete';
-    req.body.salaryFrequency = req.body.salaryFrequency ? req.body.salaryFrequency : 'Incomplete';
+    req.body.salaryFrequency = req.body.salaryFrequency ? req.body.salaryFrequency : 'monthly';
     req.body.employmentNumber = req.body.employmentNumber ? req.body.employmentNumber : 'Incomplete';
     req.body.applicationStatus = req.body.applicationStatus ? req.body.applicationStatus : '';
+    req.body.EmploymentVerificationStatus = req.body.EmploymentVerificationStatus ? req.body.EmploymentVerificationStatus : '';
+    req.body.CreditReportStatus = req.body.CreditReportStatus ? req.body.CreditReportStatus : '';
+    
+    const uploadedDocs={
+      name:req.body.firstName,
+      surname:req.body.lastName,
+      idNumber:req.body.RSAIDNumber,
+      paySlip:'',
+      idDocument:''
+    };
+    req.body.uploadedDocs = uploadedDocs;
     //End case
     validateRequest(req, next, schema);
 }
@@ -527,7 +545,9 @@ function updateSchema(req, res, next) {
         role: Joi.string().valid(Role.Admin, Role.User, Role.Customer).required(),
         creditScore:Joi.string(),
         applicationStatus:Joi.string().allow(null, ''),
-        uploadedDocs:uploadedDocsSchema
+        uploadedDocs:uploadedDocsSchema,
+        EmploymentVerificationStatus:Joi.string().allow(null, ''),
+        CreditReportStatus:Joi.string().allow(null, '')
     });
     // only admins can update role
     //Now updates coming from web form, do we still need this??

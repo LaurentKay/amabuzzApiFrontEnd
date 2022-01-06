@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
+    //any: Schema.Types.Mixed
         customerId:{type:String},
         customerName:{type:String},
         customerSurname:{type:String},
@@ -303,9 +304,9 @@ const schema = new Schema({
 });
 
 
-schema.virtual('isVerified').get(function () {
-    return !!(this.verified || this.passwordReset);
-});
+// schema.virtual('isVerified').get(function () {
+//     return !!(this.verified || this.passwordReset);
+// });
 
 schema.set('toJSON', {
     virtuals: true,
