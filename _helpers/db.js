@@ -9,6 +9,7 @@ module.exports = {
     Customer: require('customers/customers.model'),
     CustomerHistory: require('customers/customersHistory.model'),
     Compuscan: require('compuscan/compuscans.model'),
+    CompusanAnswerSave: require('compuscan/compuscanAnswerSave.model'),
     compuscanHistory: require('compuscan/compuscanHistory.model'),
     CustomerSignature: require('customers/customerSignature.model'),
     AffordabilityQuestions: require('systemConfig/affordabilityQuestions.model'),

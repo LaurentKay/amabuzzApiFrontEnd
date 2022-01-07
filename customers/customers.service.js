@@ -224,8 +224,8 @@ async function update(id, params) {
 
     return basicDetails(customer);
 }
-async function updateCustDoc(id, uploadeDocs){
-    const filter = {"RSAIDNumber":uploadeDocs.idNumber};
+async function updateCustDoc(id, uploadedDocs){
+    const filter = {"RSAIDNumber":uploadedDocs.idNumber};
     // const updateDoc = {
     //     $set:{
     //         uploadedDocs: uploadeDocs
@@ -235,7 +235,8 @@ async function updateCustDoc(id, uploadeDocs){
     // const result = await  db.Customer.updateOne(filter, updateDoc);
     // return result;
     const customer = await db.Customer.findOne(filter); 
-    Object.assign(customer, uploadeDocs);
+    Object.assign(customer, {uploadedDocs});
+    //console.log('The Cust: ', customer, "=====>", uploadedDocs);
     await customer.save();
     return {message:'document updated'};
 }
@@ -278,8 +279,8 @@ async function createHistory(params) {
 
 async function insertSignature(params) {
 
-    const existingCust = db.CustomerSignature.findOne({"CustomerIDnumber":params.CustomerIDnumber, "CustomerUUID":params.CustomerUUID});
-    //console.log('New sig: ', params, existingCust);
+    const existingCust = await db.CustomerSignature.findOne({"CustomerIDnumber":params.CustomerIDnumber, "CustomerUUID":params.CustomerUUID});
+    //console.log('New sig: ', params, existingCust); 61d80c1be816e223f847a7b5
     if(!existingCust){
         //console.log('In If: ', params);
         const customerSignature = new db.CustomerSignature(params);

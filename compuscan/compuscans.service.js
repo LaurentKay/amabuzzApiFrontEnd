@@ -85,18 +85,17 @@ async function getReportFromDB(id) {
 }
 
 async function insertCustomerAnswers(params) {
-    const compAns = dbTruId.collection('compuscanAnswerSaves').findOne({"applicationReference":params.applicationReference});
+    const compAns = await db.CompusanAnswerSave.findOne({"applicationReference":params.applicationReference});
+    console.log('New Ans: ', params, compAns);
     if(!compAns){
-        // validate    
-        dbTruId.collection('compuscanAnswerSaves').insertOne(params, function (
-            err,
-            info
-        ) {
-            params
-            
-        });
-        return params;
+        //console.log('In If: ', params);
+        const compusanAnswerSave = new db.CompusanAnswerSave(params);
+
+        await compusanAnswerSave.save();
+
+        return compusanAnswerSave;
     }else{
+        //console.log('In Else: ', params);
         const filter = {"applicationReference":params.applicationReference};
         const upAns = {
             $set:{
@@ -106,8 +105,33 @@ async function insertCustomerAnswers(params) {
                 accounts:params.accounts
             }
         };
-        const result = await dbTruId.collection('compuscanAnswerSaves').updateOne(filter, upAns);
+        const result = await db.CompusanAnswerSave.updateOne(filter, upAns);
         return result;
     }
+
+    // const compAns = dbTruId.collection('compuscanAnswerSaves').findOne({"applicationReference":params.applicationReference});
+    // if(!compAns){
+    //     // validate    CompusanAnswerSave
+    //     dbTruId.collection('compuscanAnswerSaves').insertOne(params, function (
+    //         err,
+    //         info
+    //     ) {
+    //         params
+            
+    //     });
+    //     return params;
+    // }else{
+    //     const filter = {"applicationReference":params.applicationReference};
+    //     const upAns = {
+    //         $set:{
+    //             telephoneNumbers:params.telephoneNumbers,
+    //             employers:params.employers,
+    //             addresses:params.addresses,
+    //             accounts:params.accounts
+    //         }
+    //     };
+    //     const result = await dbTruId.collection('compuscanAnswerSaves').updateOne(filter, upAns);
+    //     return result;
+    // }
 
 }
