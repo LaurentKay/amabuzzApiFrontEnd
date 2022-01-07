@@ -86,7 +86,7 @@ async function getReportFromDB(id) {
 
 async function insertCustomerAnswers(params) {
     const compAns = await db.CompusanAnswerSave.findOne({"applicationReference":params.applicationReference});
-    console.log('New Ans: ', params, compAns);
+    //console.log('New Ans: ', params, compAns);
     if(!compAns){
         //console.log('In If: ', params);
         const compusanAnswerSave = new db.CompusanAnswerSave(params);
