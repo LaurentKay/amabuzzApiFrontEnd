@@ -226,14 +226,18 @@ async function update(id, params) {
 }
 async function updateCustDoc(id, uploadeDocs){
     const filter = {"RSAIDNumber":uploadeDocs.idNumber};
-    const updateDoc = {
-        $set:{
-            uploadedDocs: uploadeDocs
-        }
-    }
-    //console.log('Doc 2 up >>>>>> ', uploadeDocs);
-    const result = await  db.Customer.updateOne(filter, updateDoc);
-    return result; 
+    // const updateDoc = {
+    //     $set:{
+    //         uploadedDocs: uploadeDocs
+    //     }
+    // }
+    // //console.log('Doc 2 up >>>>>> ', uploadeDocs);
+    // const result = await  db.Customer.updateOne(filter, updateDoc);
+    // return result;
+    const customer = await db.Customer.findOne(filter); 
+    Object.assign(customer, uploadeDocs);
+    await customer.save();
+    return {message:'document updated'};
 }
 async function updateAssessment(id, body) {
     const bodyAff = body; //[0];
