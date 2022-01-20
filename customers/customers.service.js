@@ -189,7 +189,7 @@ async function createCustomer(params) {
         <p>Your Account:</p>
         <p>Email: ${customer.emailAddress}</p>
         <p>Please click the link below to activate your account.</p>
-        <a href='http://localhost:3000/email-activate?code=${emailVerify}&user=${customer.RSAIDNumber}'>Activate</a>
+        <a href='https://www.amabuzz.co.za/email-activate?code=${emailVerify}&user=${customer.RSAIDNumber}'>Activate</a>
         `;
     const subject = "Amabuzz System Email Activation";
     await sendEmail.sendEmail({to: customer.emailAddress, subject, html});
