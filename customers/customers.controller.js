@@ -8,6 +8,7 @@ const Role = require('_helpers/role');
 const customerService = require('./customers.service');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
+const config = require('config.json');
 
 const updateAssessment = (req, res, next) => {
     // if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
@@ -20,6 +21,7 @@ const updateAssessment = (req, res, next) => {
 // routes
 router.post('/login', authenticateSchema, authenticate);
 router.post('/register', createCustomerSchema, createCustomer);
+router.get('/appMessageSettings', appMessageSettings);
 //router.get('/:id', authorize(), getById);
 router.post('/uploads', uploads);
 router.post('/',  createSchema, create); //authorize(),
@@ -27,6 +29,7 @@ router.put('/:id',  updateSchema, update); //authorize(),
 router.put('/affordability/:customerId', updateAssemssmentSchema, updateAssessment); //authorize(),
 router.post('/sendpassword', sendResetLink);
 router.post('/resetpassword', resetPassword);
+router.post('/emailactivate', emailActivate);
 //router.post('/insertHistory',  createHistory); //
 router.post('/insertSignature', insertSignature);
 //router.get('/contract/:id', getSigedContract)
@@ -126,7 +129,12 @@ function updateAssemssmentSchema (req, res, next) {
   // const v = schema.validate(req.body) [0]
   validateRequest(req.body, next, schema);
 }
-
+function appMessageSettings(req, res, next){
+  //console.log('Is this being called at all');
+  customerService.appMessageSettings()
+  .then(appsettings => res.send(appsettings))
+  .catch(next);
+}
 function authenticateSchema(req, res, next) {
   const schema = Joi.object({
     RSAIDNumber: Joi.string().required(),
@@ -286,6 +294,14 @@ async function resetPassword(req, res, next){
     res.status(201).send({message:'Unable to reset your password, please try again later'});
   }
 }
+async function emailActivate(req, res, next){
+  const ret = await customerService.emailActivate(req.body);
+  if(ret.ok && ret.nModified > 0){
+    res.status(200).send({message:'Your account is now active'});
+  }else{
+    res.status(201).send({message:'Unable to activate your account, Please try again later'});
+  }
+}
 async function sendResetLink(req, res, next){
   //console.log('The ID: ', req.body);
   try{
@@ -300,7 +316,7 @@ async function sendResetLink(req, res, next){
                 <p>Your Account:</p>
                 <p>Email: ${customer.emailAddress}</p>
                 <p>Please click the link below to reset your password.</p>
-                <a href='http://localhost:3000/reset-password?code=${pwdrestCode}&user=${customer.RSAIDNumber}'>Reset Password</a>
+                <a href='https://www.amabuzz.co.za/reset-password?code=${pwdrestCode}&user=${customer.RSAIDNumber}'>Reset Password</a>
                 `;
                 const subject = "'Amabuzz System Password Reset'";
                 sendNotification(message, subject, customer.emailAddress, res);
@@ -329,21 +345,14 @@ function shuffle(str) {
 function sendNotification(body, subject, email, res){
   //console.log("The email: ", req.body);
   let testAccount = nodemailer.createTestAccount();
-  let transporter = nodemailer.createTransport({
-      host: 'mail.ecquatorial.com', //'smtp.gmail.com',
-      port:465,
-      auth: {
-          user:'sales@ecquatorial.com', //'laurentkayembe@gmail.com',
-          pass:'7$jG!(x2Eptm', //'Ka140E45'
-      }
-  });
+  let transporter = nodemailer.createTransport(config.smtpOptions);
   
   //const email = email;
   //const message = req.body.message; Your email was submitted, we will come back to you shortly 
   //const subject = subject;
   const content = body;
   var mail = {
-      from:'Laurent.Kayembe@intellicell.co.za',
+      from:config.emailFrom,
       to: email,
       subject:subject,
       html:content
@@ -352,7 +361,7 @@ function sendNotification(body, subject, email, res){
   transporter.sendMail(mail, (err, data) =>{
       if(err){
           //console.log('Mail Error: ', err);
-          res.status(201).send({message:'Unable to reset your password, please again later'});
+          res.status(201).send({message:'Unable to reset your password, please try again later'});
       }else{
         //console.log('Mail data: ', data);
         res.status(200).send({message:'A link to reset your password has been sent to you email'});

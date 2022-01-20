@@ -12,6 +12,7 @@ module.exports = {
     CompusanAnswerSave: require('compuscan/compuscanAnswerSave.model'),
     compuscanHistory: require('compuscan/compuscanHistory.model'),
     CustomerSignature: require('customers/customerSignature.model'),
+    ApplicationMessage: require('customers/applicationCompleted.model'),
     AffordabilityQuestions: require('systemConfig/affordabilityQuestions.model'),
     WorkflowNameConfig: require('globalConfig/workflowNameConfig.model'),
     PoolConfig: require('globalConfig/poolConfig.model'),

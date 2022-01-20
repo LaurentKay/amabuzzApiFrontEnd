@@ -36,7 +36,9 @@ module.exports = {
     getApplicantSigedContract,
     getLoginById,
     upLoginById,
-    resetPassword
+    resetPassword,
+    emailActivate,
+    appMessageSettings
 };
 
 function basicDetails(customer) {
@@ -166,6 +168,8 @@ async function create(params) {
 }
 
 async function createCustomer(params) {
+    const str='123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const emailVerify = shuffle(str).substr(0, 12);
     // validate
     let testcustomer = await db.CustomerLogin.findOne({"RSAIDNumber":params.RSAIDNumber});
     //console.log('Whats returned? ', testcustomer);
@@ -173,13 +177,36 @@ async function createCustomer(params) {
         throw 'Cutomer: ' + params.RSAIDNumber + ' already registered';
     }
     params.customerPassword = hash(params.customerPassword);
+    params.emailVerify = emailVerify;
+    params.emailVerified = false;
     const customer = new db.CustomerLogin(params);
 
     // save customer
     await customer.save();
+    //Send email for verication  
+    const html = `
+        <h2>Thank you for Registering.</h2>
+        <p>Your Account:</p>
+        <p>Email: ${customer.emailAddress}</p>
+        <p>Please click the link below to activate your account.</p>
+        <a href='http://localhost:3000/email-activate?code=${emailVerify}&user=${customer.RSAIDNumber}'>Activate</a>
+        `;
+    const subject = "Amabuzz System Email Activation";
+    await sendEmail.sendEmail({to: customer.emailAddress, subject, html});
+    //sendNotification(message, subject, customer.emailAddress, res);
 
-    return {message:'Successfully registered, please proceed to login'};// basicDetails(customer);
+    return {message:'Successfully registered, please check your email to ativate your account.'};// basicDetails(customer);
 }
+function shuffle(str) {
+    var parts = str.split('');
+    for (var i = parts.length; i > 0;) {
+        var random = parseInt(Math.random() * i);
+        var temp = parts[--i];
+        parts[i] = parts[random];
+        parts[random] = temp;
+    }
+    return parts.join('');
+  }
 async function getLoginById(RSAIDNumber){
     let customer = await db.CustomerLogin.findOne({"RSAIDNumber":RSAIDNumber});
     if(!customer){
@@ -213,6 +240,23 @@ async function resetPassword(dataReset){
     const result = await db.CustomerLogin.updateOne(filter, upCust);
     //console.log('The resetpwd: ', result);
     return result;
+}
+async function emailActivate(custData){
+    //const CustomerLogin = await db.CustomerLogin.findOne({"RSAIDNumber" : custData.RSAIDNumber});
+    const filter = {"RSAIDNumber" : custData.RSAIDNumber, emailVerify: custData.code};
+    const upCust = {
+        $set:{
+            emailVerified:true
+        }
+    }
+    const result = await db.CustomerLogin.updateOne(filter, upCust);
+    //console.log('Email Activate::::: ', result, custData);
+    return result;
+}
+async function appMessageSettings(){
+    const appMsg = await db.ApplicationMessage.find();
+    //console.log('Any Msg? ::::: ', appMsg);
+    return appMsg;
 }
 async function update(id, params) {
     const customer = await getCustomer(id);

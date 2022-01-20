@@ -10,6 +10,8 @@ const schema =Schema({
     emailAddress: {type: String, required: true },
     customerPassword:{type: String},
     pwdrestCode: {type: String},
+    emailVerify: {type: String},
+    emailVerified:{type: Boolean, default: false},
     createDate: {type : Date, default: Date.now }
 });
 
