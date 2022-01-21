@@ -13,7 +13,7 @@ const CCSarr = [ { id: "1", SelectBox: "false", DebtorNo: "ERINTS90086", DebtorI
                  { id: "4", SelectBox: "false", DebtorNo: "JOHBOI82081", DebtorID: "91088", MSISDN: "0823053844", ContractID: "120579", ActivationDate: "20200304", ContractEndDate: "20220304", SubscriptionEndDate: "20210531", EndDateDiff: "-277", PlanName: "MyMeg 500", Balance: "4068", MigrateToPrepaidDate: "2021/08/31", GroupName: "Group 2", PayPercent: "27", Last00DOTxnDateContract: "20210604", Last10Txns: "*02 I|02 I|02 I|02 I|00 I|00 I|00 I|02 I|02 I|02 I", PayDay: "M - 31", EmployerName: "Afriboom Pty Ltd", JobDescription: "Supervisor", AccountStatus: "D/O", "NextPTP": "", LastNote: "20210729: 0725841438: No answer.",IDNumber:"2202034800086" }, 
                  { id: "5", SelectBox: "false", DebtorNo: "SOLMAG84085", DebtorID: "91892", MSISDN: "0823222860", ContractID: "121565", ActivationDate: "20200318", ContractEndDate: "20220318", SubscriptionEndDate: "20210601", EndDateDiff: "-290", PlanName: "MyMeg 500", Balance: "1844", MigrateToPrepaidDate: "2021/08/31", GroupName: "Group 1", PayPercent: "43", Last00DOTxnDateContract: "20210723", Last10Txns: "*00 I|00 I|02 I|02 I|00 I|02 I|02 I|02 I|02 I|02 I", PayDay: "M - 25", EmployerName: "Civic Data Services", JobDescription: "Technitain", AccountStatus: "D/O", "NextPTP": "", LastNote: "20210722: SMS SENT",IDNumber:"2602034800087" }, 
                  { id: "6", SelectBox: "false", DebtorNo: "JUSPEE13084", DebtorID: "57006", MSISDN: "0664849129", ContractID: "78484", ActivationDate: "20180604", ContractEndDate: "20220604", SubscriptionEndDate: "20210604", EndDateDiff: "-365", PlanName: "MyMeg 500", Balance: "3688", MigrateToPrepaidDate: "2021/08/31", GroupName: "Group 2", PayPercent: "52", Last00DOTxnDateContract: "20210602", Last10Txns: "*02 I|02 I|02 I|02 I|00 I|00 I|02 I|02 I|02 I|02 I", PayDay: "M - 31", EmployerName: "Democratic Alliance", JobDescription: "Field Support Officer", AccountStatus: "D/O", "NextPTP": "", LastNote: "20210818: statement sent",IDNumber:"3002034800089" }, 
-                 { id: "7", SelectBox: "false", DebtorNo: "SAKNDH72089", DebtorID: "91648", MSISDN: "0664850317", ContractID: "121286", ActivationDate: "20200317", ContractEndDate: "20220317", SubscriptionEndDate: "20210605", EndDateDiff: "-285", PlanName: "MyMeg 500", Balance: "2196", MigrateToPrepaidDate: "2021/08/31", GroupName: "Group 1", PayPercent: "44", Last00DOTxnDateContract: "20210730", Last10Txns: "*02 I|02 I|02 I|02 I|00 I|00 I|02 I|02 I|02 I|02 I", PayDay: "W - Thursday", EmployerName: "G And J Auto Body", JobDescription: "Mechanical", AccountStatus: "D/O", "NextPTP": "", LastNote: "20201104: call cut",IDNumber:"3202034800085" }, 
+                 { id: "7", SelectBox: "false", DebtorNo: "SAKNDH72089", DebtorID: "91648", MSISDN: "0664850317", ContractID: "121286", ActivationDate: "20200317", ContractEndDate: "20220317", SubscriptionEndDate: "20210605", EndDateDiff: "-285", PlanName: "MyMeg 500", Balance: "2196", MigrateToPrepaidDate: "2021/08/31", GroupName: "Group 1", PayPercent: "44", Last00DOTxnDateContract: "20210730", Last10Txns: "*02 I|02 I|02 I|02 I|00 I|00 I|02 I|02 I|02 I|02 I", PayDay: "W - Thursday", EmployerName: "G And J Auto Body", JobDescription: "Mechanical", AccountStatus: "D/O", "NextPTP": "", LastNote: "20201104: call cust",IDNumber:"3202034800085" }, 
                  { id: "8", SelectBox: "false", DebtorNo: "LAMTHO89081", DebtorID: "92325", MSISDN: "0664852566", ContractID: "122072", ActivationDate: "20200325", ContractEndDate: "20220325", SubscriptionEndDate: "20210608", EndDateDiff: "-290", PlanName: "MyMeg 500", Balance: "2940", MigrateToPrepaidDate: "2021/08/31", GroupName: "Group 2", PayPercent: "55", Last00DOTxnDateContract: "20210528", Last10Txns: "*02 I|02 I|02 I|02 I|02 I|00 I|00 I|00 I|00 I|00 I", PayDay: "M - Last Working Day", EmployerName: "Amiis", JobDescription: "Receptionist", AccountStatus: "D/O", "NextPTP": "", LastNote: "20210729: sms sent",IDNumber:"3402034800081" }, 
                  { id: "9", SelectBox: "false", DebtorNo: "NKOMAB65080", DebtorID: "94678", MSISDN: "0674291226", ContractID: "125076", ActivationDate: "20200609", ContractEndDate: "20220609", SubscriptionEndDate: "20210609", EndDateDiff: "-365", PlanName: "MyMeg 500", Balance: "4017", MigrateToPrepaidDate: "2021/08/31", GroupName: "Group 2", PayPercent: "13", Last00DOTxnDateContract: "20210525", Last10Txns: "*02 I|02 I|02 I|02 I|00 I|02 I|02 I|02 I|02 I|02 I", PayDay: "M - 24", EmployerName: "Scribante Construction", JobDescription: "Merchanic", AccountStatus: "D/O", "NextPTP": "", LastNote: "20210818: sms sent",IDNumber:"3602034800086" }, 
                  { id: "10", SelectBox: "false", DebtorNo: "THANKU47087", DebtorID: "94690", MSISDN: "0674291281", ContractID: "125089", ActivationDate: "20200609", ContractEndDate: "20220609", SubscriptionEndDate: "20210609", EndDateDiff: "-365", PlanName: "MyMeg 500", Balance: "4053", MigrateToPrepaidDate: "2021/08/31", GroupName: "Group 1", PayPercent: "19", Last00DOTxnDateContract: "20210811", Last10Txns: "*00 I|00 I|02 I|02 I|02 I|02 I|02 I|02 I|02 I|02 I", PayDay: "W - Wednesday", EmployerName: "Buhle betfu carries", JobDescription: "General worker", AccountStatus: "D/O", "NextPTP": "", LastNote: "20210705: 0665143509 client drop call after asking to confirm d.o.b",IDNumber:"3702034800084" }
@@ -156,7 +156,7 @@ async function create(params) {
     //let testcustomer = await db.Customer.findOne({"RSAIDNumber":params.RSAIDNumber});
     //console.log('Whats returned? ', testcustomer);
     // if(testcustomer){
-    //     throw 'Cutomer: ' + params.RSAIDNumber + ' already registered';
+    //     throw 'Customer: ' + params.RSAIDNumber + ' already registered';
     // }
    // params.customerPassword = hash(params.customerPassword);
     const customer = new db.Customer(params);
@@ -174,7 +174,7 @@ async function createCustomer(params) {
     let testcustomer = await db.CustomerLogin.findOne({"RSAIDNumber":params.RSAIDNumber});
     //console.log('Whats returned? ', testcustomer);
     if(testcustomer){
-        throw 'Cutomer: ' + params.RSAIDNumber + ' already registered';
+        throw 'Customer: ' + params.RSAIDNumber + ' already registered';
     }
     params.customerPassword = hash(params.customerPassword);
     params.emailVerify = emailVerify;
@@ -188,14 +188,14 @@ async function createCustomer(params) {
         <h2>Thank you for Registering.</h2>
         <p>Your Account:</p>
         <p>Email: ${customer.emailAddress}</p>
-        <p>Please click the link below to activate your account.</p>
-        <a href='https://www.amabuzz.co.za/email-activate?code=${emailVerify}&user=${customer.RSAIDNumber}'>Activate</a>
+        <p>Please click the link below to verify your email address.</p>
+        <a href='https://www.amabuzz.co.za/email-activate?code=${emailVerify}&user=${customer.RSAIDNumber}'>Virify email address</a>
         `;
-    const subject = "Amabuzz System Email Activation";
+    const subject = "Amabuzz Email Verification";
     await sendEmail.sendEmail({to: customer.emailAddress, subject, html});
     //sendNotification(message, subject, customer.emailAddress, res);
 
-    return {message:'Successfully registered, please check your email to ativate your account.'};// basicDetails(customer);
+    return {message:'Successfully registered, please check your email to verify email address.'};// basicDetails(customer);
 }
 function shuffle(str) {
     var parts = str.split('');
