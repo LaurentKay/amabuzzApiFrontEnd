@@ -189,13 +189,13 @@ async function createCustomer(params) {
         <p>Your Account:</p>
         <p>Email: ${customer.emailAddress}</p>
         <p>Please click the link below to verify your email address.</p>
-        <a href='https://www.amabuzz.co.za/email-activate?code=${emailVerify}&user=${customer.RSAIDNumber}'>Virify email address</a>
+        <a href='https://www.amabuzz.co.za/email-activate?code=${emailVerify}&user=${customer.RSAIDNumber}'>Verify email address</a>
         `;
     const subject = "Amabuzz Email Verification";
     await sendEmail.sendEmail({to: customer.emailAddress, subject, html});
     //sendNotification(message, subject, customer.emailAddress, res);
 
-    return {message:'Successfully registered, please check your email to verify email address.'};// basicDetails(customer);
+    return {message:'Successfully registered, please check your inbox to verify your email address.'};// basicDetails(customer);
 }
 function shuffle(str) {
     var parts = str.split('');

@@ -297,9 +297,9 @@ async function resetPassword(req, res, next){
 async function emailActivate(req, res, next){
   const ret = await customerService.emailActivate(req.body);
   if(ret.ok && ret.nModified > 0){
-    res.status(200).send({message:'Your account is now active'});
+    res.status(200).send({message:'Your email has been verified'});
   }else{
-    res.status(201).send({message:'Unable to activate your account, Please try again later'});
+    res.status(201).send({message:'Unable to verify your email, Please try again later'});
   }
 }
 async function sendResetLink(req, res, next){
