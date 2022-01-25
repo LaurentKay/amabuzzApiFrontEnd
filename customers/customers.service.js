@@ -280,7 +280,7 @@ async function updateCustDoc(id, uploadedDocs){
     // return result;
     const customer = await db.Customer.findOne(filter); 
     Object.assign(customer, {uploadedDocs});
-    //console.log('The Cust: ', customer, "=====>", uploadedDocs);
+    //console.log('The Cust: ', customer.RSAIDNumber);
     await customer.save();
     return {message:'document updated'};
 }

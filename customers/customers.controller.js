@@ -249,14 +249,17 @@ function uploads(req, res, next){
     //     if(err) {console.log(err);}else{
     //     console.log('The file has been renamed ' + saveStatPath);}
     // });
-    
+    //console.log('The file  ' + req.body, req, req.body);
     let uploadedDocs = req.body;
     uploadedDocs.dateUploaded = new Date().toLocaleDateString('en-ZA');
     
     //console.log(uploadedDocs);
 
     customerService.updateCustDoc(req.body.idNumber, uploadedDocs)
-        .then(customer => res.status(200).json(customer))
+        .then(customer => {
+          //console.log("Any Res:::: ", customer);
+          res.status(200).send(customer.message);
+        })
         .catch(next);
     //res.send('File(s) uploaded');
 }
