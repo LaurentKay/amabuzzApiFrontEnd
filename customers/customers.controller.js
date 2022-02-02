@@ -26,6 +26,7 @@ router.get('/appMessageSettings', appMessageSettings);
 router.post('/uploads', uploads);
 router.post('/',  createSchema, create); //authorize(),
 router.put('/:id',  updateSchema, update); //authorize(),
+router.put('/appstatus/:id', appStatus);
 router.put('/affordability/:customerId', updateAssemssmentSchema, updateAssessment); //authorize(),
 router.post('/sendpassword', sendResetLink);
 router.post('/resetpassword', resetPassword);
@@ -393,9 +394,12 @@ function createCustomerSchema(req, res, next){
 }
 
 function createCustomer(req, res, next) {
-  customerService.createCustomer(req.body)
-    .then(customer => res.status(200).json(customer))
-    .catch(next);
+  const cb = (xyz) =>{
+    res.send(xyz);
+  }
+  customerService.createCustomer(req.body, cb);
+    // .then(customer => res.status(200).json(customer))
+    // .catch(next);
 }
 
 function createSchema(req, res, next) {
@@ -501,9 +505,12 @@ function createSchema(req, res, next) {
 }
 
 function create(req, res, next) {
-  customerService.create(req.body)
-    .then(customer => res.status(200).json(customer))
-    .catch(next);
+  const cb = (xyz) =>{
+    res.send(xyz);
+  }
+  customerService.create(req.body, cb);
+    // .then(customer => res.status(200).json(customer))
+    // .catch(next);
 }
 
 function updateSchema(req, res, next) {
@@ -577,10 +584,12 @@ function update(req, res, next) {
   // if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
   //   return res.status(401).json({ message: 'Unauthorized' });
   // }
-
-  customerService.update(req.params.id, req.body)
-    .then(customer => res.status(200).json(customer))
-    .catch(next);
+  const cb = (xyz) =>{
+    res.send(xyz);
+  }
+  customerService.update(req.params.id, req.body, cb);
+    // .then(customer => res.status(200).json(customer))
+    // .catch(next);
 }
 
 function _delete(req, res, next) {
@@ -603,11 +612,22 @@ function createHistory(req, res, next){
 function insertSignature(req, res, next)
 {
   //console.log(req);
-  customerService.insertSignature(req.body)
-    .then(customerSignature => res.send(customerSignature))
-    .catch(next);
+  const cb = (xyz) => {
+    res.send(xyz);
+  }
+  customerService.insertSignature(req.body, cb);
+  
+    // .then(customerSignature => res.send(customerSignature))
+    // .catch(next);
 }
-
+function appStatus(req, res, next){
+  const cb = (xyz) =>{
+    res.send(xyz);
+  }
+  customerService.appStatus(req.params.id, req.body, cb)
+    // .then(appStatus => res.status(200).send(appStatus))
+    // .catch(next);
+}
 // helper functions
 function setTokenCookie(res, token) {
   // create cookie with refresh token that expires in 7 days

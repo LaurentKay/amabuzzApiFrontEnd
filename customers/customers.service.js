@@ -38,7 +38,8 @@ module.exports = {
     upLoginById,
     resetPassword,
     emailActivate,
-    appMessageSettings
+    appMessageSettings,
+    appStatus
 };
 
 function basicDetails(customer) {
@@ -151,7 +152,7 @@ async function calculateAffordability(id) {
       return (obj);
 }
 
-async function create(params) {
+async function create(params, cb) {
     // validate
     //let testcustomer = await db.Customer.findOne({"RSAIDNumber":params.RSAIDNumber});
     //console.log('Whats returned? ', testcustomer);
@@ -164,10 +165,11 @@ async function create(params) {
     // save customer
     await customer.save();
 
-    return basicDetails(customer);
+    cb(basicDetails(customer));
+    //return basicDetails(customer);
 }
 
-async function createCustomer(params) {
+async function createCustomer(params, cb) {
     const str='123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const emailVerify = shuffle(str).substr(0, 12);
     // validate
@@ -194,8 +196,8 @@ async function createCustomer(params) {
     const subject = "Amabuzz Email Verification";
     await sendEmail.sendEmail({to: customer.emailAddress, subject, html});
     //sendNotification(message, subject, customer.emailAddress, res);
-
-    return {message:'Successfully registered, please check your inbox to verify your email address.'};// basicDetails(customer);
+    cb({message:'Successfully registered, please check your inbox to verify your email address.'});
+    //return {message:'Successfully registered, please check your inbox to verify your email address.'};// basicDetails(customer);
 }
 function shuffle(str) {
     var parts = str.split('');
@@ -258,7 +260,7 @@ async function appMessageSettings(){
     //console.log('Any Msg? ::::: ', appMsg);
     return appMsg;
 }
-async function update(id, params) {
+async function update(id, params, cb) {
     const customer = await getCustomer(id);
 
     // copy params to customer and save
@@ -266,7 +268,8 @@ async function update(id, params) {
     customer.updated = Date.now();
     await customer.save();
 
-    return basicDetails(customer);
+    cb(basicDetails(customer));
+    //return basicDetails(customer);
 }
 async function updateCustDoc(id, uploadedDocs){
     const filter = {"RSAIDNumber":uploadedDocs.idNumber};
@@ -320,8 +323,18 @@ async function createHistory(params) {
 
     return customerHistory;
 }
+async function appStatus(id, params, cb){
+    const filter = {"_id":id};
+    const appstatus = {
+        $set:{
+            applicationStatus:params.applicationStatus
+        }
+    }
+    const result = await db.Customer.updateOne(filter, appstatus);
+    cb(result);
+}
 
-async function insertSignature(params) {
+async function insertSignature(params, cb) {
 
     const existingCust = await db.CustomerSignature.findOne({"CustomerIDnumber":params.CustomerIDnumber, "CustomerUUID":params.CustomerUUID});
     //console.log('New sig: ', params, existingCust); 61d80c1be816e223f847a7b5
@@ -330,8 +343,8 @@ async function insertSignature(params) {
         const customerSignature = new db.CustomerSignature(params);
 
         await customerSignature.save();
-
-        return customerSignature;
+        cb(customerSignature);
+        //return customerSignature;
     }else{
         //console.log('In Else: ', params);
         const filter = {"CustomerIDnumber": params.CustomerIDnumber}
@@ -341,7 +354,8 @@ async function insertSignature(params) {
             }
         }
         const result = await db.CustomerSignature.updateOne(filter, upSignature);
-        return result;
+        cb(result);
+        //return result;
     }
   }
 async function authenticate({ RSAIDNumber, customerPassword, ipAddress }) {
