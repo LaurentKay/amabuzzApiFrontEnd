@@ -198,7 +198,7 @@ async function createCustomer(params, cb) {
     //sendNotification(message, subject, customer.emailAddress, res);
     cb({
         message:'Successfully registered, please check your inbox to verify your email address.',
-        account:{},
+        account:[],
         custRet: customer
     });
     //return {message:'Successfully registered, please check your inbox to verify your email address.'};// basicDetails(customer);
