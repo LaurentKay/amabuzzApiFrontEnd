@@ -196,7 +196,6 @@ async function createCustomer(params, cb) {
     const subject = "Amabuzz Email Verification";
     await sendEmail.sendEmail({to: customer.emailAddress, subject, html});
     //sendNotification(message, subject, customer.emailAddress, res);
-    { message, account, jwtToken,custRet }
     cb({
         message:'Successfully registered, please check your inbox to verify your email address.',
         account:{},

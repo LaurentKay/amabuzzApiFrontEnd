@@ -395,7 +395,7 @@ function createCustomerSchema(req, res, next){
 
 function createCustomer(req, res, next) {
   const cb = (xyz) =>{
-    res.send(xyz);
+    res.status(200).send(xyz);
   }
   customerService.createCustomer(req.body, cb);
     // .then(customer => res.status(200).json(customer))
