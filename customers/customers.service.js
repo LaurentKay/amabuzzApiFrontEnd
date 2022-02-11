@@ -174,9 +174,9 @@ async function createCustomer(params, cb) {
     const emailVerify = shuffle(str).substr(0, 12);
     // validate
     let testcustomer = await db.CustomerLogin.findOne({"RSAIDNumber":params.RSAIDNumber});
-    //console.log('Whats returned? ', testcustomer);
+    //console.log('Whats returned? ', testcustomer); ' + params.RSAIDNumber + '
     if(testcustomer){
-        throw 'Customer: ' + params.RSAIDNumber + ' already registered';
+        throw 'Customer already registered';
     }
     params.customerPassword = hash(params.customerPassword);
     params.emailVerify = emailVerify;
@@ -196,7 +196,12 @@ async function createCustomer(params, cb) {
     const subject = "Amabuzz Email Verification";
     await sendEmail.sendEmail({to: customer.emailAddress, subject, html});
     //sendNotification(message, subject, customer.emailAddress, res);
-    cb({message:'Successfully registered, please check your inbox to verify your email address.'});
+    { message, account, jwtToken,custRet }
+    cb({
+        message:'Successfully registered, please check your inbox to verify your email address.',
+        account:{},
+        custRet: customer
+    });
     //return {message:'Successfully registered, please check your inbox to verify your email address.'};// basicDetails(customer);
 }
 function shuffle(str) {
