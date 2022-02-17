@@ -24,7 +24,7 @@ app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit:50000}
 app.use(cookieParser());
 
 // allow cors requests from any origin and with credentials
-app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
+app.use(cors({origin:'*'}));
 
 app.use(fileUpload({
     createParentPath:true,
@@ -37,6 +37,10 @@ app.use(fileUpload({
 //app.use('/accounts', require('./accounts/accounts.controller'));
 //app.use('/products', require('./products/products.controller'));
 //app.use('/orders', require('./orders/orders.controller'));
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
 app.get('/', (req, res, next) =>{
   res.status(200).send('I am alive');
 });
