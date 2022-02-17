@@ -93,6 +93,12 @@ async function insertCustomerAnswers(params) {
 
         await compusanAnswerSave.save();
 
+        const filter1 = {"_id":params.applicationReference};
+        const upApp = {
+            CreditReportStatus:params.CreditReportStatus
+        };
+        
+        await db.Customer.updateOne(filter1, upApp);
         return compusanAnswerSave;
     }else{
         //console.log('In Else: ', params);
@@ -105,6 +111,11 @@ async function insertCustomerAnswers(params) {
                 accounts:params.accounts
             }
         };
+        const filter1 = {"_id":params.applicationReference};
+        const upApp = {
+            CreditReportStatus:params.CreditReportStatus
+        };
+        await db.Customer.updateOne(filter1, upApp);
         const result = await db.CompusanAnswerSave.updateOne(filter, upAns);
         return result;
     }
