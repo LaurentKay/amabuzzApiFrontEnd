@@ -24,7 +24,7 @@ app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit:50000}
 app.use(cookieParser());
 
 // allow cors requests from any origin and with credentials
-app.use(cors({origin:'*'}));
+app.use(cors());
 
 app.use(fileUpload({
     createParentPath:true,
