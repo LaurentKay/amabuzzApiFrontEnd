@@ -176,7 +176,9 @@ async function createCustomer(params, cb) {
     let testcustomer = await db.CustomerLogin.findOne({"RSAIDNumber":params.RSAIDNumber});
     //console.log('Whats returned? ', testcustomer); ' + params.RSAIDNumber + '
     if(testcustomer){
-        throw 'Customer already registered';
+        cb({message:'Customer already registered'}, 201);
+        return;
+        //throw 'Customer already registered';
     }
     params.customerPassword = hash(params.customerPassword);
     params.emailVerify = emailVerify;
@@ -200,7 +202,7 @@ async function createCustomer(params, cb) {
         message:'Successfully registered, please check your inbox to verify your email address.',
         account:[],
         custRet: customer
-    });
+    }, 200);
     //return {message:'Successfully registered, please check your inbox to verify your email address.'};// basicDetails(customer);
 }
 function shuffle(str) {
