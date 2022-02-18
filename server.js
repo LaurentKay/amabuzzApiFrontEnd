@@ -37,10 +37,10 @@ app.use(fileUpload({
 //app.use('/accounts', require('./accounts/accounts.controller'));
 //app.use('/products', require('./products/products.controller'));
 //app.use('/orders', require('./orders/orders.controller'));
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  next();
-});
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   next();
+// });
 app.get('/', (req, res, next) =>{
   res.status(200).send('I am alive');
 });
