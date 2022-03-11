@@ -1,4 +1,5 @@
 const config = require('config.json');
+const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
@@ -6,6 +7,7 @@ const sendEmail = require('_helpers/send-email');
 const db = require('_helpers/db');
 const Role = require('_helpers/role');
 const compuscanService = require('../compuscan/compuscans.service');
+const customerOtpservice = require('./customerOtp.service');
 const ccsService = require('../ccsConnection/ccs.service');
 const CCSarr = [ { id: "1", SelectBox: "false", DebtorNo: "ERINTS90086", DebtorID: "89637", MSISDN: "0664790659", ContractID: "118928", ActivationDate: "20200206", ContractEndDate: "20210206", SubscriptionEndDate: "20210418", EndDateDiff: "71", PlanName: "MyMeg 500", Balance: "1848", MigrateToPrepaidDate: "2021/08/31", GroupName: "Group 1", PayPercent: "50", Last00DOTxnDateContract: "20210813", Last10Txns: "*00 I|00 I|00 I|00 I|00 I|00 I|00 I|02 I|02 I|02 I", PayDay: "M - 15", EmployerName: "Uitenhage Provincial Hospital", JobDescription: "General Assistant", AccountStatus: "D/O", NextPTP: "", LastNote: "20210810: 0634228978 cant pay anything extra on account as he want to pay the contract first and complete then will take other after ",IDNumber:"2001014800086" },
                  { id: "2", SelectBox: "false", DebtorNo: "SOPMOT02087", DebtorID: "90368", MSISDN: "0664817155", ContractID: "119762", ActivationDate: "20200219", ContractEndDate: "20220219", SubscriptionEndDate: "20210511", EndDateDiff: "-284", PlanName: "MyMeg 500", Balance: "1595", MigrateToPrepaidDate: "2021/08/31", GroupName: "Group 2", PayPercent: "47", Last00DOTxnDateContract: "20210701", Last10Txns: "*E1 I|04 I|04 I|00 I|00 I|02 I|00 I|00 I|00 I|02 I", PayDay: "M - Last Working Day", EmployerName: "Si Group Inc", JobDescription: "Truck Washer", AccountStatus: "D/O", "NextPTP": "", LastNote: "20210617: 0834041994: No answer.",IDNumber:"2402014800086" }, 
@@ -39,28 +41,29 @@ module.exports = {
     resetPassword,
     emailActivate,
     appMessageSettings,
-    appStatus
+    appStatus,
+    prequalifiedids,
 };
 
 function basicDetails(customer) {
     const { _id, firstName, lastName, RSAIDNumber, mobileNumber,
          homeNumber, workNumber, emailAddress, homeAddress1,
          homeAddress2, homeCity, homeSuburb, homePostalCode,
-         bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, uploadedDocs, creditScore, affordability } = customer;
+         bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, uploadedDocs, creditScore, affordability, promoCode } = customer;
 
     return { _id, firstName, lastName, RSAIDNumber, mobileNumber, homeNumber, workNumber, emailAddress,
         homeAddress1, homeAddress2, homeCity, homeSuburb, homePostalCode,
-        bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, uploadedDocs, creditScore, affordability};
+        bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, uploadedDocs, creditScore, affordability, promoCode};
 }
 function addCreditScore(customer){
     const {_id, firstName, lastName, RSAIDNumber, mobileNumber,
         homeNumber, workNumber, emailAddress, homeAddress1,
         homeAddress2, homeCity, homeSuburb, homePostalCode,
-        bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, uploadedDocs, creditScore, affordability,
+        bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, uploadedDocs, creditScore, affordability, promoCode,
         Balance, PayPercent, GroupName, Last10Txns} = customer;
     const  newcustomer = { _id, firstName, lastName, RSAIDNumber, mobileNumber, homeNumber, workNumber, emailAddress,
         homeAddress1, homeAddress2, homeCity, homeSuburb, homePostalCode,
-        bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, uploadedDocs, creditScore, affordability,
+        bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, uploadedDocs, creditScore, affordability, promoCode,
         Balance, PayPercent, GroupName, Last10Txns}; //compuscan;
     //console.log(newcustomer);
     return newcustomer;
@@ -169,7 +172,7 @@ async function create(params, cb) {
     //return basicDetails(customer);
 }
 
-async function createCustomer(params, cb) {
+async function createCustomer(params, pc, cb) {
     const str='123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const emailVerify = shuffle(str).substr(0, 12);
     // validate
@@ -197,13 +200,86 @@ async function createCustomer(params, cb) {
         `;
     const subject = "Amabuzz Email Verification";
     await sendEmail.sendEmail({to: customer.emailAddress, subject, html});
-    //sendNotification(message, subject, customer.emailAddress, res);
-    cb({
-        message:'Successfully registered, please check your inbox to verify your email address.',
-        account:[],
-        custRet: customer
-    }, 200);
+    //Generate OTP and add it to the response
+    const OTP = between(10000,99999);
+    //Check for excessive requests for this number (more than 2 request in a 24hr period)
+    //if(customerOtp.service.numRequestLast24h(req.body.RSAIDNumber) < 2){
+    let otpSent = {};
+    params['otp'] = OTP;
+    params['SMSSentID'] = 'incomplete';
+    customerOtpservice.save({
+        RSAIDNumber:params.RSAIDNumber, 
+        mobileNumber:params.mobileNumber,
+        emailAddress:params.emailAddress,
+        otp:OTP,
+        SMSSentID:'incomplete'}); //params, OTP
+    const ToMSISDN = "27" + params.mobileNumber.slice(1, 10);
+    const text=`Your One Time Pin (OTP) code is: ${OTP}. Kind Regards, Intellicell.`;
+    console.log('Message to numner: ', text, ToMSISDN, params);
+    const uri = `https://blds2.panaceamobile.com/json?action=message_send&username=intelicell&password=casino&to=${ToMSISDN}&text=${text}`;
+    const custRet = { 
+        _id: customer._id,
+        RSAIDNumber: customer.RSAIDNumber,
+        firstName: customer.firstName,
+        lastName: customer.lastName,
+        mobileNumber: customer.mobileNumber,
+        emailAddress: customer.emailAddress,
+        customerPassword: customer.customerPassword,
+        createDate: customer.createDate,
+        emailVerify: customer.emailVerify,
+        promoCode:pc
+      };
+    try{
+        const {data} = await axios.get(uri);
+        //console.log('Sms Data before if: ', data);
+        if(data.message === "Sent"){
+            const SMSSentID = data.details;
+            console.log('Sms Data: ', data);
+            //update the db
+            customerOtpservice.update(params.RSAIDNumber, SMSSentID);
+            otpSent['OTP'] = OTP;
+            //otpSent['message'] = 'sent';
+            cb({
+                message:'Successfully registered, please check your inbox to verify your email address.',
+                account:[],
+                custRet: custRet,
+                otpSent
+            }, 200);
+            //res.send({OTP:OTP, message:'sent'});
+        }else{
+             //res.status(200).send({OTP:'', message:'There was an error sending your One Time Pin code, please try again.'});
+             otpSent['OTP'] = '';
+             otpSent['message'] = 'There was an error sending your One Time Pin code, please try again.';
+             cb({
+                message:'Successfully registered, please check your inbox to verify your email address.',
+                account:[],
+                custRet: custRet,
+                otpSent
+            }, 201);
+        }
+    }catch(e){
+        console.log('Error: ', e.message);
+        //res.status(401).send({OTP:'', message:e.message});
+        otpSent['OTP'] = '';
+        otpSent['message'] = e.message;
+        cb({
+           message:'Successfully registered, please check your inbox to verify your email address.',
+           account:[],
+           custRet: custRet,
+           otpSent
+       }, 201);
+    }
+    // cb({
+    //     message:'Successfully registered, please check your inbox to verify your email address.',
+    //     account:[],
+    //     custRet: customer
+    // }, 200);
     //return {message:'Successfully registered, please check your inbox to verify your email address.'};// basicDetails(customer);
+}
+function between(min, max){
+    return Math.floor(
+        Math.random() * (max-min) + min
+    );
 }
 function shuffle(str) {
     var parts = str.split('');
@@ -265,6 +341,10 @@ async function appMessageSettings(){
     const appMsg = await db.ApplicationMessage.find();
     //console.log('Any Msg? ::::: ', appMsg);
     return appMsg;
+}
+async function prequalifiedids(cb){
+    const preqIDs = await db.PrequalifiedIDS.find();
+    cb(preqIDs, 200);
 }
 async function update(id, params, cb) {
     const customer = await getCustomer(id);
@@ -365,26 +445,29 @@ async function insertSignature(params, cb) {
     }
   }
 async function authenticate({ RSAIDNumber, customerPassword, ipAddress }) {
-    const custRet = await db.CustomerLogin.findOne({ RSAIDNumber });
+    const custRetu = await db.CustomerLogin.findOne({ RSAIDNumber });
     //console.log(custRet, customerPassword);
-    if (!custRet  || !bcrypt.compareSync(customerPassword, custRet.customerPassword)) {
+    if (!custRetu  || !bcrypt.compareSync(customerPassword, custRetu.customerPassword)) {
         return {
             message: 'ID number or password is incorrect',
             account:{},
             jwtToken: '',
-            custRet: {}
+            custRetu: {}
         }
         //throw 'ID number or password is incorrect';
     }
 
     // authentication successful so generate jwt and refresh tokens
-    const jwtToken = generateJwtToken(custRet);
-    const refreshToken = generateRefreshToken(custRet, ipAddress);
+    const jwtToken = generateJwtToken(custRetu);
+    const refreshToken = generateRefreshToken(custRetu, ipAddress);
 
     // save refresh token
     await refreshToken.save();
-
+    const otpColl = await db.CallBacks.find({RSAIDNumber}).sort({"dateRequested":-1}).limit(1);
     const account = await db.Customer.find({ RSAIDNumber });
+    
+    //.findOne({"$query":{RSAIDNumber}, "$orderby":{"_id":-1}});
+    //console.log('OTPColl:::: ', otpColl);
     // const compuscan = compuscanService.getReportFromDB(RSAIDNumber);
     // if(!compuscan){
     //     //
@@ -393,7 +476,10 @@ async function authenticate({ RSAIDNumber, customerPassword, ipAddress }) {
         message:'',
         account,
         jwtToken,
-        custRet
+        custRetu,
+        OTP: otpColl[0].otp,
+        SMSSentID: otpColl[0].SMSSentID,
+        callbackID:otpColl[0]._id
     };
     // ,
     //     refreshToken: refreshToken.token

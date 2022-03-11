@@ -20,6 +20,7 @@ module.exports = {
     Roles: require('roles/roles.model'),
     Customerincorrectanswers: require('customers/customerVerification.model'),
     CustomerLogin: require('customers/customerlogin.model'),
+    PrequalifiedIDS: require('customers/prequalifiedids.model'),
     Questions: require('questions/questions.model'),
     truID: require('truID/truID.model'),
     CallBacks: require('customers/customerCallback.model'),

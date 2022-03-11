@@ -4,10 +4,11 @@ module.exports = {
     save,
     update,
     numRequestLast24h,
+    updateRegistered,
 };
 
 async function save(body){
-    const callbackcust = new db.CallBacks(body.body);
+    const callbackcust = new db.CallBacks(body);
     await callbackcust.save();
     return callbackcust;
 }
@@ -17,6 +18,17 @@ async function update(RSAIDNumber, SMSSentID){
     const updafield = {
         $set:{
             SMSSentID: SMSSentID
+        }
+    }
+    const result = await db.CallBacks.updateOne(filter, updafield);
+    return result;
+}
+async function updateRegistered(callbackID, SMSSentID, OTP){
+    const filter = {"_id":callbackID};
+    const updafield = {
+        $set:{
+            SMSSentID:SMSSentID,
+            otp:OTP
         }
     }
     const result = await db.CallBacks.updateOne(filter, updafield);

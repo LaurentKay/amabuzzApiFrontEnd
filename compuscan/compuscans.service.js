@@ -54,8 +54,22 @@ async function create(params) {
     
     // save compuscan report
     await compuscan.save();
-
-    return compuscan;
+    const {EnqCC_EMPLOYER, 
+        EnqCC_CompuSCORE, 
+        EnqCC_CustomSCORE, 
+        CODIX, EnqCC_ADDRESS, 
+        EnqCC_TELEPHONE,
+        customerId,
+        customerName,
+        customerSurname} = compuscan;
+    return {EnqCC_EMPLOYER, 
+        EnqCC_CompuSCORE, 
+        EnqCC_CustomSCORE, 
+        CODIX, EnqCC_ADDRESS, 
+        EnqCC_TELEPHONE,
+        customerId,
+        customerName,
+        customerSurname};//compuscan;
 }
 
 async function createHistory(params) {
@@ -81,7 +95,22 @@ async function getReportFromDB(id) {
         return "";
     }
     console.log('Month diff: ' + cMonth, id);
-    return compuscan;
+    const {EnqCC_EMPLOYER, 
+        EnqCC_CompuSCORE, 
+        EnqCC_CustomSCORE, 
+        CODIX, EnqCC_ADDRESS, 
+        EnqCC_TELEPHONE,
+        customerId,
+        customerName,
+        customerSurname} = compuscan;
+    return {EnqCC_EMPLOYER, 
+        EnqCC_CompuSCORE, 
+        EnqCC_CustomSCORE, 
+        CODIX, EnqCC_ADDRESS, 
+        EnqCC_TELEPHONE,
+        customerId,
+        customerName,
+        customerSurname};//compuscan;
 }
 
 async function insertCustomerAnswers(params) {
@@ -97,7 +126,7 @@ async function insertCustomerAnswers(params) {
         const upApp = {
             CreditReportStatus:params.CreditReportStatus
         };
-        
+
         await db.Customer.updateOne(filter1, upApp);
         return compusanAnswerSave;
     }else{

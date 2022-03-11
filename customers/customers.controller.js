@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
-const {validateRequest} = require('_middleware/validate-request');
+const {validateRequest, validateReque, validateRequ} = require('_middleware/validate-request');
 const authorize = require('_middleware/authorize')
 const Role = require('_helpers/role');
 //const accountService = require('../accounts/account.service');
@@ -9,6 +9,7 @@ const customerService = require('./customers.service');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
 const config = require('config.json');
+const { default: axios } = require('axios');
 
 const updateAssessment = (req, res, next) => {
     // if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
@@ -22,6 +23,7 @@ const updateAssessment = (req, res, next) => {
 router.post('/login', authenticateSchema, authenticate);
 router.post('/register', createCustomerSchema, createCustomer);
 router.get('/appMessageSettings', appMessageSettings);
+router.get('/prequalifiedids', prequalifiedids)
 //router.get('/:id', authorize(), getById);
 router.post('/uploads', uploads);
 router.post('/',  createSchema, create); //authorize(),
@@ -136,29 +138,60 @@ function appMessageSettings(req, res, next){
   .then(appsettings => res.send(appsettings))
   .catch(next);
 }
+function prequalifiedids(req, res, next){
+  const cb = (xyz, code) =>{
+    res.status(code).send(xyz);
+  }
+  customerService.prequalifiedids(cb);
+}
 function authenticateSchema(req, res, next) {
   const schema = Joi.object({
     RSAIDNumber: Joi.string().required(),
     customerPassword: Joi.string().required()
   });
-  validateRequest(req, next, schema);
+  //console.log('=>: ', req.body);
+  validateReque(req, next, schema);
 }
 
-function authenticate(req, res, next) {
-  const { RSAIDNumber, customerPassword } = req.body;
+async function authenticate(req, res, next) {
+  console.log('=>: ', req.body);
+  const { RSAIDNumber, customerPassword } = req.body.value;
+  const reCaptchaValue = req.body.reCaptchaValue;
+  const promoCode = req.body.promoCode;
   const ipAddress = req.ip;
-  customerService.authenticate({ RSAIDNumber, customerPassword, ipAddress })
-    .then(({ message, account, jwtToken,custRet }) => {
-      if(message === ''){
-        //setTokenCookie(res, refreshToken);
-        //console.log('=>: ', account);
-        res.status(200).json({account, custRet});
-      }else{
-        res.status(201).json({message});
-      }
-      
-    })
-    .catch(next);
+  const dataRes = await axios.post(
+    `https://www.google.com/recaptcha/api/siteverify?secret=${config.private_key}&response=${reCaptchaValue}`
+  );
+  if(dataRes.data.success){
+    customerService.authenticate({ RSAIDNumber, customerPassword, ipAddress })
+      .then(({ message, account, jwtToken,custRetu, OTP, SMSSentID, callbackID }) => {
+        if(message === ''){
+          //setTokenCookie(res, refreshToken);
+          //console.log('=>: ', account);
+          const custRet = { 
+            _id: custRetu._id,
+            RSAIDNumber: custRetu.RSAIDNumber,
+            firstName: custRetu.firstName,
+            lastName: custRetu.lastName,
+            mobileNumber: custRetu.mobileNumber,
+            emailAddress: custRetu.emailAddress,
+            customerPassword: custRetu.customerPassword,
+            createDate: custRetu.createDate,
+            pwdrestCode: custRetu.pwdrestCode,
+            emailVerify: custRetu.emailVerify,
+            promoCode
+          };
+          console.log('=>: ', custRet, promoCode);
+          res.status(200).json({account, custRet, OTP, SMSSentID, callbackID});
+        }else{
+          res.status(201).json({message});
+        }
+        
+      })
+      .catch(next);
+  }else{
+    res.status(201).send({message:'You are a robot'});
+  }
 }
 
 // function refreshToken(req, res, next) {
@@ -390,14 +423,15 @@ function createCustomerSchema(req, res, next){
     emailAddress: Joi.string(),
   });
 
-  validateRequest(req, next, schema);
+  validateRequ(req, next, schema);
 }
 
 function createCustomer(req, res, next) {
   const cb = (xyz, code) =>{
     res.status(code).send(xyz);
   }
-  customerService.createCustomer(req.body, cb);
+  const {value, promoCode} = req.body;
+  customerService.createCustomer(value, promoCode, cb);
     // .then(customer => res.status(200).json(customer))
     // .catch(next);
 }
@@ -459,7 +493,8 @@ function createSchema(req, res, next) {
         applicationStatus:Joi.string().allow(null, ''),
         uploadedDocs:uploadedDocsSchema,
         EmploymentVerificationStatus:Joi.string().allow(null, ''),
-        CreditReportStatus:Joi.string().allow(null, '')
+        CreditReportStatus:Joi.string().allow(null, ''),
+        promoCode:Joi.string().allow(null, '')
     });
     //In case data is comming from the web form these field will not be available  Assessment
     req.body.homeAddress1 = req.body.homeAddress1 ? req.body.homeAddress1 : 'Incomplete';
@@ -491,6 +526,7 @@ function createSchema(req, res, next) {
     req.body.applicationStatus = req.body.applicationStatus ? req.body.applicationStatus : '';
     req.body.EmploymentVerificationStatus = req.body.EmploymentVerificationStatus ? req.body.EmploymentVerificationStatus : '';
     req.body.CreditReportStatus = req.body.CreditReportStatus ? req.body.CreditReportStatus : '';
+    req.body.promoCode = req.body.promoCode ? req.body.promoCode : '';
     
     const uploadedDocs={
       name:req.body.firstName,
@@ -566,7 +602,8 @@ function updateSchema(req, res, next) {
         applicationStatus:Joi.string().allow(null, ''),
         uploadedDocs:uploadedDocsSchema,
         EmploymentVerificationStatus:Joi.string().allow(null, ''),
-        CreditReportStatus:Joi.string().allow(null, '')
+        CreditReportStatus:Joi.string().allow(null, ''),
+        promoCode:Joi.string().allow(null, '')
     });
     // only admins can update role
     //Now updates coming from web form, do we still need this??

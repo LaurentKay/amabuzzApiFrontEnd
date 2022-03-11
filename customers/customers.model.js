@@ -120,6 +120,7 @@ const schema = new Schema({
     applicationFailureReason:{type: String},
     createDate:{type:Date, default: Date.now},
     applicationReferenceNumber:{type:String},
+    promoCode:{type:String},
 });
 
 schema.virtual('isVerified').get(function () {
