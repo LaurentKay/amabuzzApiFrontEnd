@@ -43,6 +43,7 @@ module.exports = {
     appMessageSettings,
     appStatus,
     prequalifiedids,
+    viewContract,
 };
 
 function basicDetails(customer) {
@@ -211,7 +212,7 @@ async function createCustomer(params, pc, cb) {
         RSAIDNumber:params.RSAIDNumber, 
         mobileNumber:params.mobileNumber,
         emailAddress:params.emailAddress,
-        otp:OTP,
+        otp:[OTP],
         SMSSentID:'incomplete'}); //params, OTP
     const ToMSISDN = "27" + params.mobileNumber.slice(1, 10);
     const text=`Your One Time Pin (OTP) code is: ${OTP}. Kind Regards, Intellicell.`;
@@ -236,9 +237,10 @@ async function createCustomer(params, pc, cb) {
             const SMSSentID = data.details;
             console.log('Sms Data: ', data);
             //update the db
-            customerOtpservice.update(params.RSAIDNumber, SMSSentID);
-            otpSent['OTP'] = OTP;
-            //otpSent['message'] = 'sent';
+            //customerOtpservice.update(params.RSAIDNumber, SMSSentID);
+            otpSent['OTP'] = [OTP];
+            otpSent['SMSSentID'] = SMSSentID;
+            otpSent['message'] = 'sent';
             cb({
                 message:'Successfully registered, please check your inbox to verify your email address.',
                 account:[],
@@ -248,8 +250,9 @@ async function createCustomer(params, pc, cb) {
             //res.send({OTP:OTP, message:'sent'});
         }else{
              //res.status(200).send({OTP:'', message:'There was an error sending your One Time Pin code, please try again.'});
-             otpSent['OTP'] = '';
+             otpSent['OTP'] = [];
              otpSent['message'] = 'There was an error sending your One Time Pin code, please try again.';
+             otpSent['SMSSentID'] = '';
              cb({
                 message:'Successfully registered, please check your inbox to verify your email address.',
                 account:[],
@@ -260,8 +263,9 @@ async function createCustomer(params, pc, cb) {
     }catch(e){
         console.log('Error: ', e.message);
         //res.status(401).send({OTP:'', message:e.message});
-        otpSent['OTP'] = '';
+        otpSent['OTP'] = [];
         otpSent['message'] = e.message;
+        otpSent['SMSSentID'] = ''; 
         cb({
            message:'Successfully registered, please check your inbox to verify your email address.',
            account:[],
@@ -417,9 +421,26 @@ async function appStatus(id, params, cb){
         }
     }
     const result = await db.Customer.updateOne(filter, appstatus);
+    //the sending of email need to happen here
+    const cust = await db.Customer.findOne(filter);
+    //const existingCust = await db.CustomerSignature.findOne({"CustomerIDnumber":cust.RSAIDNumber, "CustomerUUID":id});
+    //console.log('Customer:: ', cust._id, '  Existing Contr:: ', existingCust.CustomerContract, ' _id: ', id);
+    const subject = 'Contract details'; //<h2>Your Contract.</h2>
+    const html = `<p>click this link to see the details of your contract:</p>
+                <a href='https://www.amabuzz.co.za/view-contract?code=${id}&user=${cust.RSAIDNumber}'>View Contract</a>`;
+                //<p><embed src='data:application/pdf;base64,${existingCust.CustomerContract}' type='application/pdf' /></p>`;
+    console.log('HTML::: ', html);
+    await sendEmail.sendEmail({to: cust.emailAddress, subject, html});
     cb(result);
 }
-
+async function viewContract(body, cb){
+    const existingCust = await db.CustomerSignature.findOne({"CustomerIDnumber":body.RSAIDNumber, "CustomerUUID":body.code});
+    if(existingCust){
+        cb({message:'', error:'', CustomerContract:existingCust.CustomerContract}, 200);
+    }else{
+        cb({message:'Customer not contract not found', error:'', CustomerContract:''}, 201);
+    }
+}
 async function insertSignature(params, cb) {
 
     const existingCust = await db.CustomerSignature.findOne({"CustomerIDnumber":params.CustomerIDnumber, "CustomerUUID":params.CustomerUUID});

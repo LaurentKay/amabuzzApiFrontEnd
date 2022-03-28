@@ -8,7 +8,7 @@ const schema = new Schema({
     lastname: {type: String},
     emailAddress:{type: String},
     mobileNumber:{type: String},
-    otp: {type: Number},
+    otp:[{type: Number}],
     SMSSentID: {type: String},
     dateRequested: {type: Date, default: Date.now}
 });

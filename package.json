@@ -13,6 +13,7 @@
     },
     "dependencies": {
         "axios": "^0.21.1",
+        "axios-https-proxy-fix": "^0.17.1",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.0",
         "cookie-parser": "^1.4.5",
@@ -21,6 +22,7 @@
         "express-fileupload": "^1.2.1",
         "express-jwt": "^6.0.0",
         "hashids": "^2.2.8",
+        "intecon-soap": "^1.1.2",
         "joi": "^17.4.0",
         "jsonwebtoken": "^8.5.1",
         "jszip": "^3.6.0",
@@ -29,6 +31,7 @@
         "mongodb": "^3.6.1",
         "mongoose": "^5.9.25",
         "mssql": "^6.3.2",
+        "node-cache": "^5.1.2",
         "nodemailer": "^6.6.5",
         "request": "^2.88.2",
         "rootpath": "^0.1.2",

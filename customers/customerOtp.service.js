@@ -5,9 +5,15 @@ module.exports = {
     update,
     numRequestLast24h,
     updateRegistered,
+    otpFind,
+    updateResend,
 };
 
 async function save(body){
+    const docsExists = await db.CallBacks.find({RSAIDNumber:body.RSAIDNumber});
+    if(docsExists.length > 0){
+        await db.CallBacks.deleteMany({RSAIDNumber:body.RSAIDNumber});
+    }
     const callbackcust = new db.CallBacks(body);
     await callbackcust.save();
     return callbackcust;
@@ -34,6 +40,17 @@ async function updateRegistered(callbackID, SMSSentID, OTP){
     const result = await db.CallBacks.updateOne(filter, updafield);
     return result;
 }
+async function updateResend(body, callbackID, RSAIDNumber){
+    console.log('updateResend :::: The array coming???? ', body, callbackID);
+    const filter = {"RSAIDNumber": RSAIDNumber};
+    const updafield = {
+        $set:{
+            otp:body
+        }
+    }
+    const result = await db.CallBacks.updateOne(filter, updafield);
+    return result;
+}
 async function numRequestLast24h(id){
     const callback = await db.CallBacks.findOne({"RSAIDNumber":id});
     if(!callback) return "";
@@ -46,4 +63,9 @@ async function numRequestLast24h(id){
     }
     console.log('The value of count: ', count);
     return count;
+}
+async function otpFind(RSAIDNumber){
+    const otpColl = await db.CallBacks.find({RSAIDNumber}).sort({"dateRequested":-1}).limit(1);
+    console.log('Is it an array?????? ', otpColl);
+    return otpColl;
 }

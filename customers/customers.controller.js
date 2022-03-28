@@ -10,7 +10,10 @@ const fs = require('fs');
 const nodemailer = require('nodemailer');
 const config = require('config.json');
 const { default: axios } = require('axios');
+const xml2js = require('xml2js');
+const { validateAccountCDV } = require('../intecon/intecon');
 
+const parser = new xml2js.Parser({explicitArray: false, trim: true, stripPrefix:true});
 const updateAssessment = (req, res, next) => {
     // if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
     //     return res.status(401).json({ message: 'Unauthorized' });
@@ -33,10 +36,51 @@ router.put('/affordability/:customerId', updateAssemssmentSchema, updateAssessme
 router.post('/sendpassword', sendResetLink);
 router.post('/resetpassword', resetPassword);
 router.post('/emailactivate', emailActivate);
+router.post('/viewContract', viewContract);
 //router.post('/insertHistory',  createHistory); //
 router.post('/insertSignature', insertSignature);
+router.post('/validateAccount', validateAccount);
 //router.get('/contract/:id', getSigedContract)
 
+async function validateAccount(req, res, next){
+  console.log('\nReq::: ', req.body);
+  const params = {
+    //id_no:req.body.RSAIDNumber,
+    account_type:req.body.account_type,
+    bank_acc_no:req.body.bank_acc_no,
+    bank_branch_cd:req.body.bank_branch_cd,
+    //client_no, 
+    //first_name:req.body.first_name, 
+    //surname:req.body.surname
+  };
+  const response = await validateAccountCDV(params);
+  parser.parseString(response, (err, irt) => {
+    if(err){
+      console.log('Xml_Err::: ', err);
+    }
+    //const g = irt['soap:Envelope']['soap:Body'].CallResponse;
+    const g1 = irt['soap:Envelope']['soap:Body'].CallResponse.CallResult;
+    let reply_cd;
+    let reply_str;
+    parser.parseString(g1, (errw, opData) =>{
+      if(errw){
+        console.log(errw);
+      }
+      reply_cd = opData.responses.ValidateAccountCDV.reply_cd;
+      const len = opData.responses.ValidateAccountCDV.reply_str.indexOf('(');
+      reply_str = opData.responses.ValidateAccountCDV.reply_str.substr(0, len-1);
+      console.log('Finally:::: ', reply_cd, reply_str);
+    });
+    // const len = g.CallResult.indexOf('</reply_str>') - g.CallResult.indexOf('<reply_str>');
+    // const resp = g.CallResult.substr(g.CallResult.indexOf('<reply_str>')+11,len-11);
+    //console.log('Response:::: ', resp, g1);
+    if(Number(reply_cd) === 207){//resp === 'Request successfully completed (0000)'){
+      res.status(200).send({message: reply_str});
+    }else{
+      res.status(201).send({message:reply_str})
+    }
+  });
+}
 function updateUploadSchema(req, res, next){
     const documentsSchema = Joi.object.keys({
         name:Joi.string(),
@@ -182,7 +226,7 @@ async function authenticate(req, res, next) {
             promoCode
           };
           console.log('=>: ', custRet, promoCode);
-          res.status(200).json({account, custRet, OTP, SMSSentID, callbackID});
+          res.status(200).json({account, custRet, message:'',OTP, SMSSentID, callbackID});
         }else{
           res.status(201).json({message});
         }
@@ -338,6 +382,12 @@ async function emailActivate(req, res, next){
   }else{
     res.status(201).send({message:'Unable to verify your email, Please try again later'});
   }
+}
+async function viewContract(req, res, next){
+  const cb = (xyz, code) =>{
+    res.status(code).send(xyz);
+  }
+  await customerService.viewContract(req.body, cb);
 }
 async function sendResetLink(req, res, next){
   //console.log('The ID: ', req.body);
