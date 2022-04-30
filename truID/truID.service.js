@@ -96,7 +96,7 @@ async function get90DayTransactions(customerData)
     };
 
     const resultData  = await axios(config)
-    console.log(resultData.data)
+    console.log('Any Data Returned???? ===> ',resultData.data);
     let collectionID = resultData.headers.location.replace('https://www.truidconnect.com/','');
     linkApplicantToCustomerIDNumber(customerData, collectionID);
     insertTransactions(resultData.data);
@@ -163,7 +163,7 @@ async function downloadTransactions(params)
 };
 
 async function insertTransactions(params) {
-
+  console.log('>>>>>>>>insertTransactions Before Insert<<<<<<<<');
   dbTruId.collection('truidcollections').insertOne(params, function (
     err,
     info
