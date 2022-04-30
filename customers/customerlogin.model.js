@@ -12,6 +12,7 @@ const schema =Schema({
     pwdrestCode: {type: String},
     emailVerify: {type: String},
     emailVerified:{type: Boolean, default: false},
+    termsConditions:{type: Boolean},
     createDate: {type : Date, default: Date.now }
 });
 

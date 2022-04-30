@@ -37,10 +37,10 @@ async function getCompanies()
 {
         var config = {
         method: 'get',
-        url: 'https://api.truidconnect.com/consultant-api/companies',
+        url: 'https://api.truidconnect.io/consultant-api/companies',
         headers: {
             'Accept': 'application/json', 
-            'X-API-KEY': '0360c7f508194384a2845e3f793351e5'
+            'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9'
             }
         };
 
@@ -55,10 +55,10 @@ async function getDataServices()
 {
     var config = {
         method: 'get',
-        url: 'https://api.truidconnect.com/consultant-api/companies/95smo6sl8bqiw9wl4l4p3fenl/brands/458vvj0stkcwdlfe3yhor3lac/data-services',
+        url: 'https://api.truidconnect.io/consultant-api/companies/95smo6sl8bqiw9wl4l4p3fenl/brands/458vvj0stkcwdlfe3yhor3lac/data-services',
         headers: { 
           'Accept': 'application/json', 
-          'X-API-KEY': '0360c7f508194384a2845e3f793351e5'
+          'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9'
         }
       };
       
@@ -73,10 +73,10 @@ async function getDataProviders()
 {
   var config = {
     method: 'get',
-    url: 'https://api.truidconnect.com/consultant-api/data-providers',
+    url: 'https://api.truidconnect.io/consultant-api/data-providers',
     headers: { 
       'Accept': 'application/json', 
-      'X-API-KEY': '0360c7f508194384a2845e3f793351e5'
+      'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9'
     }
   };  
 }
@@ -86,11 +86,11 @@ async function get90DayTransactions(customerData)
 
   var config = {
     method: 'post',
-    url: 'https://api.truidconnect.com/consultant-api/collections',
+    url: 'https://api.truidconnect.io/consultant-api/collections',
     headers: { 
       'Accept': 'application/json', 
       'Content-Type': 'application/json', 
-      'X-API-KEY': '0360c7f508194384a2845e3f793351e5'
+      'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9'
     },
     data : customerData
     };
@@ -112,10 +112,10 @@ function linkApplicantToCustomerIDNumber(data, collectionID)
     /*
     var config = {
       method: 'get',
-      url: 'https://api.truidconnect.com/delivery-api/collections/'+collectionID+'/products',
+      url: 'https://api.truidconnect.io/delivery-api/collections/'+collectionID+'/products',
       headers: { 
         'Accept': 'application/json', 
-        'X-API-KEY': '0360c7f508194384a2845e3f793351e5'
+        'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9'
       }
     };
     
@@ -150,10 +150,10 @@ async function downloadTransactions(params)
     var config = {
       method: 'get',
       //url: 'https://api.truidconnect.com/delivery-api/collections/'+params.collectionID+'/products/'+params.productCollectionID+'',
-      url: 'https://api.truidconnect.com/delivery-api/collections/75gnwp9edqykpblp6ltov1x86/products/cqnczbkwnyurvza7cjjrl1v2w',
+      url: 'https://api.truidconnect.io/delivery-api/collections/75gnwp9edqykpblp6ltov1x86/products/cqnczbkwnyurvza7cjjrl1v2w',
       headers: { 
         'Accept': 'application/json', 
-        'X-API-KEY': '0360c7f508194384a2845e3f793351e5'
+        'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9'
       }
     };
     
@@ -178,10 +178,10 @@ async function getCategorisations(params)
   
       var config = {
         method: 'get',
-        url: 'https://api.truidconnect.com/categorisation-api/categorisations/'+params.collectionID+'',
+        url: 'https://api.truidconnect.io/categorisation-api/categorisations/'+params.collectionID+'',
         headers: { 
           'Accept': 'application/json', 
-          'X-API-KEY': '0360c7f508194384a2845e3f793351e5'
+          'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9'
         }
       };
       
@@ -209,10 +209,10 @@ async function uploadPDF(params)
   
   var config = {
     method: 'post',
-    url: 'https://api.truidconnect.com/extracter-api/uploads',
+    url: 'https://api.truidconnect.io/extracter-api/uploads',
     headers: { 
       'Accept': 'application/json', 
-      'X-API-KEY': '0360c7f508194384a2845e3f793351e5', 
+      'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9', 
       ...data.getHeaders()
     },
     data : data
@@ -227,10 +227,10 @@ async function downloadPDF(params)
 {
   var config = {
     method: 'get',
-    url: 'https://api.truidconnect.com/delivery-api/collections/'+params.collectionID+'/products/' + params.productID +'',
+    url: 'https://api.truidconnect.io/delivery-api/collections/'+params.collectionID+'/products/' + params.productID +'',
     headers: { 
       'Accept': 'application/json', 
-      'X-API-KEY': '0360c7f508194384a2845e3f793351e5'
+      'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9'
     }
   };
 
@@ -244,9 +244,9 @@ async function downloadAllProductsbyCollectionID(params)
   
   var config = {
     method: 'get',
-    url: 'https://api.truidconnect.com/delivery-api/collections/'+params.collectionID+'/products/all',
+    url: 'https://api.truidconnect.io/delivery-api/collections/'+params.collectionID+'/products/all',
     headers: { 
-      'X-API-KEY': '0360c7f508194384a2845e3f793351e5'
+      'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9'
     }
   };
 

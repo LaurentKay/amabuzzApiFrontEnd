@@ -471,6 +471,7 @@ function createCustomerSchema(req, res, next){
     customerPassword:Joi.string(),
     mobileNumber: Joi.string().required(),
     emailAddress: Joi.string(),
+    termsConditions: Joi.boolean(),
   });
 
   validateRequ(req, next, schema);
@@ -577,6 +578,7 @@ function createSchema(req, res, next) {
     req.body.EmploymentVerificationStatus = req.body.EmploymentVerificationStatus ? req.body.EmploymentVerificationStatus : '';
     req.body.CreditReportStatus = req.body.CreditReportStatus ? req.body.CreditReportStatus : '';
     req.body.promoCode = req.body.promoCode ? req.body.promoCode : '';
+    req.body.contractType = 'Loan'; 
     
     const uploadedDocs={
       name:req.body.firstName,
@@ -653,7 +655,8 @@ function updateSchema(req, res, next) {
         uploadedDocs:uploadedDocsSchema,
         EmploymentVerificationStatus:Joi.string().allow(null, ''),
         CreditReportStatus:Joi.string().allow(null, ''),
-        promoCode:Joi.string().allow(null, '')
+        promoCode:Joi.string().allow(null, ''),
+        contractType:Joi.string()
     });
     // only admins can update role
     //Now updates coming from web form, do we still need this??

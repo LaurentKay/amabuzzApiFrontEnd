@@ -121,6 +121,7 @@ const schema = new Schema({
     createDate:{type:Date, default: Date.now},
     applicationReferenceNumber:{type:String},
     promoCode:{type:String},
+    contractType:{type:String}
 });
 
 schema.virtual('isVerified').get(function () {
