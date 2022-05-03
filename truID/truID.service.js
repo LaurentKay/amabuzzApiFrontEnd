@@ -97,9 +97,9 @@ async function get90DayTransactions(customerData)
 
     const resultData  = await axios(config)
     console.log('Any Data Returned???? ===> ',resultData);
-    let collectionID = resultData.headers.location.replace('https://www.truidconnect.com/','');
+    let collectionID = resultData.headers.location.replace('https://www.truidconnect.io/','');
     linkApplicantToCustomerIDNumber(customerData, collectionID);
-    //insertTransactions(resultData.data);
+    //insertTransactions(resultData.data); from: https://www.truidconnect.com/ ==> https://www.truidconnect.io/
     return resultData.headers.location;
 };
 
@@ -130,7 +130,7 @@ function linkApplicantToCustomerIDNumber(data, collectionID)
 
   //console.log("insertCollection" + JSON.stringify(data) +" " + collectionID);
     applicationCollection = {
-        "idNumber": JSON.stringify(data.idNumber),
+        "idNumber": data.idNumber,
         "collectionID": collectionID
     }
 
