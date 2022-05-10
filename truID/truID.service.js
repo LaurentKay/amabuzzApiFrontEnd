@@ -6,6 +6,8 @@ const sendEmail = require('_helpers/send-email');
 const db = require('_helpers/db');
 const Role = require('_helpers/role');
 var axios = require('axios');
+const fs = require('fs');
+const JSZip = require('jszip');
 const mongodb = require('mongodb')
 
 module.exports = {
@@ -145,21 +147,21 @@ function linkApplicantToCustomerIDNumber(data, collectionID)
 }
 
 async function downloadTransactions(params)
-  {
-    //url: 'https://api.truidconnect.io/delivery-api/collections/a5b0umy7wb5lk5le3c7qwgu9k/products/cqnczbkwnyurvza7cjjrl1v2w',
-    var config = {
-      method: 'get',
-      url: 'https://api.truidconnect.com/delivery-api/collections/'+params.collectionID+'/products/'+params.productCollectionID+'',
-      //url: 'https://api.truidconnect.io/delivery-api/collections/75gnwp9edqykpblp6ltov1x86/products/cqnczbkwnyurvza7cjjrl1v2w',
-      headers: { 
-        'Accept': 'application/json', 
-        'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9'
-      }
-    };
-    
-    const resultData  = await axios(config)
-        //console.log(resultData.data)
-        return resultData.data;
+{
+  //url: 'https://api.truidconnect.com/delivery-api/collections/a5b0umy7wb5lk5le3c7qwgu9k/products/cqnczbkwnyurvza7cjjrl1v2w',
+  var config = {
+    method: 'get',
+    url: 'https://api.truidconnect.io/delivery-api/collections/'+params.collectionID+'/products/'+params.productCollectionID+'',
+    //url: 'https://api.truidconnect.com/delivery-api/collections/75gnwp9edqykpblp6ltov1x86/products/cqnczbkwnyurvza7cjjrl1v2w',
+    headers: { 
+      'Accept': 'application/json', 
+      'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9'
+    }
+  };
+  
+  const resultData  = await axios(config)
+      //console.log(resultData.data)
+      return resultData.data;
 };
 
 async function insertTransactions(params) {
@@ -245,16 +247,72 @@ async function downloadAllProductsbyCollectionID(params)
   var config = {
     method: 'get',
     url: 'https://api.truidconnect.io/delivery-api/collections/'+params.collectionID+'/products/all',
+    responseType:'arraybuffer',
     headers: { 
-      'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9'
+      'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9',
     }
   };
+  let truID = await dbTruId.collection("truidcollections").findOne({"idNumber":params.idNumber});
+  if(!truID){
+    truParams = {
+      collectionID:params.collectionID,
+      productDownloadURL:'https://api.truidconnect.io/delivery-api/collections/'+params.collectionID+'/products/all',
+      idNumber:params.idNumber
+    };
+    insertTransactions(truParams);
+  }
+  const resultData  = await axios(config);
 
-  const resultData  = await axios(config)
-  
-  
-  return resultData.data;
+  console.log("TruID returned========> ", resultData.data);
+  const buff = Buffer.from(resultData.data, 'binary');
+  //const text = buff.toString('ascii');
+  const fwrite = `enq${params.collectionID}.zip`;
+  fs.writeFileSync(fwrite, buff);
+  fs.readFile(fwrite, (err, data) =>{
+    if(err) throw err;
+    JSZip.loadAsync(data).then((zip) =>{
+      //Read the content of the file
+      for(const [key, value] of Object.entries(zip)){
+        if(key === 'files'){
+          for(const [keyx, valuex] of Object.entries(value)){
+            if(keyx.endsWith('pdf')){
+              //console.log(valuex, valuex.name);
+              zip.file(valuex.name).async('base64')
+              .then((datax) =>{
+                //console.log('datax ====> ', datax);
+                const filter = {"idNumber":params.idNumber, "collectionID":params.collectionID};
+                const bkst = {
+                    $set:{
+                        bankStatement: datax
+                    }
+                }
+                dbTruId.collection("truidcollections").updateOne(filter, bkst);
+              });
+            }
+            if(keyx.endsWith('json')){
+              zip.file(valuex.name).async('string')
+              .then((datas) =>{
+                // console.log('Stringy=> ', datas);
+                // console.log('JSONY ===> ', JSON.parse(datas));
+                const dataj = JSON.parse(datas);
+                const filter = {"idNumber":params.idNumber, "collectionID":params.collectionID};
+                const bkst = {
+                    $set:{
+                      account: dataj.account,
+                      transactions: dataj.transactions
+                    }
+                }
+                dbTruId.collection("truidcollections").updateOne(filter, bkst);
+              })
+            }
+          }
+        }
+      }
+    });
+  });
+  //return resultData.data;
 };
+
 
 
 async function getTransactionsByCustomerRSAIdNumber(rsaIDNumber) {  
