@@ -438,9 +438,12 @@ async function appStatus(id, params, cb){
     //the sending of email need to happen here
     const cust = await db.Customer.findOne(filter);
     //const existingCust = await db.CustomerSignature.findOne({"CustomerIDnumber":cust.RSAIDNumber, "CustomerUUID":id});
-    //console.log('Customer:: ', cust._id, '  Existing Contr:: ', existingCust.CustomerContract, ' _id: ', id);
-    //Download truID transactions at this point
-    const trucol = await dbTruId.collection("applicantTruIdCollections").findOne({"idNumber":cust.RSAIDNumber});
+    //console.log('Customer:: ', cust._id, '  Existing Contr:: ', existingCust.CustomerContract, ' _id: ', id); 
+    //Download truID transactions at this point 
+    
+    const trucol = await db.ApplicantTruIdCollections.find({"idNumber":cust.RSAIDNumber}).sort({'_id':-1}).limit(1);
+    
+    console.log('Anything in trucol????? :::: ', trucol, ' ========> ', trucol[0].collectionID, cust.RSAIDNumber);
     const truparams = {
       collectionID: trucol.collectionID,
       idNumber: cust.RSAIDNumber

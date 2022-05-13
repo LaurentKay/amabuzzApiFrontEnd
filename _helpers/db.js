@@ -23,6 +23,7 @@ module.exports = {
     PrequalifiedIDS: require('customers/prequalifiedids.model'),
     Questions: require('questions/questions.model'),
     truID: require('truID/truID.model'),
+    ApplicantTruIdCollections: require('truID/applicantTruIdCollections.model'),
     CallBacks: require('customers/customerCallback.model'),
     isValidId
 };
