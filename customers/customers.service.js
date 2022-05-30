@@ -46,6 +46,7 @@ module.exports = {
     appStatus,
     prequalifiedids,
     viewContract,
+    getCustomerDocs,
 };
 
 let dbTruId;
@@ -62,24 +63,31 @@ mongodb.connect(
 
 function basicDetails(customer) {
     const { _id, firstName, lastName, RSAIDNumber, mobileNumber,
-         homeNumber, workNumber, emailAddress, homeAddress1,
-         homeAddress2, homeCity, homeSuburb, homePostalCode,
-         bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, uploadedDocs, creditScore, affordability, promoCode } = customer;
+        homeNumber, maritalStatus, emailAddress, promoCode, homeAddress1,deliveryPostalCode, deliverySuburb, deliveryCity, deliveryAddress1,
+        homeAddress2, homeCity, homeSuburb, homeProvince, homePostalCode,
+        employerName, employerContactNumber, employmentNumber, employerAddress1, employerAddressCity, yearEmployed, monthEmployed, employerAddressPostalCode,
+        salaryFrequency, salaryDay, occupation,workNumber, createdDate,
+        bankName, bankBranch, bankAccountNumber, bankAccHolderName, bankAccountType, role,  account, affordability,
+        applicationStatus } = customer; //uploadedDocs,
 
-    return { _id, firstName, lastName, RSAIDNumber, mobileNumber, homeNumber, workNumber, emailAddress,
-        homeAddress1, homeAddress2, homeCity, homeSuburb, homePostalCode,
-        bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, uploadedDocs, creditScore, affordability, promoCode};
+   return { _id, firstName, lastName, RSAIDNumber, mobileNumber,
+            homeNumber, maritalStatus, emailAddress, promoCode, homeAddress1,deliveryPostalCode, deliverySuburb, deliveryCity, deliveryAddress1,
+            homeAddress2, homeCity, homeSuburb, homeProvince, homePostalCode,
+            employerName, employerContactNumber, employmentNumber, employerAddress1, employerAddressCity, yearEmployed, monthEmployed, employerAddressPostalCode,
+            salaryFrequency, salaryDay, occupation,workNumber, createdDate,
+            bankName, bankBranch, bankAccountNumber, bankAccHolderName, bankAccountType, role,  account, affordability,
+            applicationStatus }; //uploadedDocs,
 }
 function addCreditScore(customer){
     const {_id, firstName, lastName, RSAIDNumber, mobileNumber,
         homeNumber, workNumber, emailAddress, homeAddress1,
         homeAddress2, homeCity, homeSuburb, homePostalCode,
-        bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, uploadedDocs, creditScore, affordability, promoCode,
+        bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, creditScore, affordability, promoCode,
         Balance, PayPercent, GroupName, Last10Txns} = customer;
     const  newcustomer = { _id, firstName, lastName, RSAIDNumber, mobileNumber, homeNumber, workNumber, emailAddress,
         homeAddress1, homeAddress2, homeCity, homeSuburb, homePostalCode,
-        bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, uploadedDocs, creditScore, affordability, promoCode,
-        Balance, PayPercent, GroupName, Last10Txns}; //compuscan;
+        bankName, bankBranch, bankAccountNumber, bankAccHolderName, updated, active, role, creditScore, affordability, promoCode,
+        Balance, PayPercent, GroupName, Last10Txns}; //compuscan; uploadedDocs, 
     //console.log(newcustomer);
     return newcustomer;
 }
@@ -489,7 +497,15 @@ async function insertSignature(params, cb) {
         cb(result);
         //return result;
     }
-  }
+}
+async function getCustomerDocs(id){
+    //console.log('This is the _id: ', id);
+    const filter = {"_id":id};
+    const customer = await db.Customer.findById(id);
+    //console.log('The customer::::> ', customer);
+    const {uploadedDocs} = customer;
+    return uploadedDocs;
+}
 async function authenticate({ RSAIDNumber, customerPassword, ipAddress }) {
     const custRetu = await db.CustomerLogin.findOne({ RSAIDNumber });
     //console.log(custRet, customerPassword);
@@ -514,13 +530,13 @@ async function authenticate({ RSAIDNumber, customerPassword, ipAddress }) {
     
     //.findOne({"$query":{RSAIDNumber}, "$orderby":{"_id":-1}});
     //console.log('OTPColl:::: ', otpColl);
-    // const compuscan = compuscanService.getReportFromDB(RSAIDNumber);
+    // const compuscan = compuscanService.getReportFromDB(RSAIDNumber); basicDetails
     // if(!compuscan){
     //     //
     // }
     return {
         message:'',
-        account,
+        account:account.map((x) =>basicDetails(x)),
         jwtToken,
         custRetu,
         OTP: otpColl[0].otp,

@@ -27,6 +27,7 @@ router.post('/login', authenticateSchema, authenticate);
 router.post('/register', createCustomerSchema, createCustomer);
 router.get('/appMessageSettings', appMessageSettings);
 router.get('/prequalifiedids', prequalifiedids)
+router.get('/getCustomerDocs/:id',  getCustomerDocs); 
 //router.get('/:id', authorize(), getById);
 router.post('/uploads', uploads);
 router.post('/',  createSchema, create); //authorize(),
@@ -97,6 +98,10 @@ function updateUploadSchema(req, res, next){
    // const v = schema.validate(req.body)
 
     validateRequest(req, next, schema)
+}
+function getCustomerDocs(req, res, next){
+  customerService.getCustomerDocs(req.params.id)
+    .then(custDocs=> res.status(200).send(custDocs));
 }
 function updateAssemssmentSchema (req, res, next) {
 
