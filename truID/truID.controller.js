@@ -4,6 +4,7 @@ const Joi = require('joi');
 const {validateRequest} = require('_middleware/validate-request');
 const authorize = require('_middleware/authorize')
 const Role = require('_helpers/role');
+const db = require('_helpers/db');
 const truIDService = require('./truID.service');
 const io = require("socket.io")
 // routes
@@ -19,6 +20,8 @@ router.get('/consultant-api/uploads/', uploadPDF);
 router.get('/consultant-api/downloadPDFbankStatement/:collectionID/productCollectionID/:productCollectionID', downloadPDF);
 router.get('/consultant-api/downloadAllProducts/:collectionID', downloadAllProductsbyCollectionID);
 router.get('/consultant-api/getTransactionsByCustomerRSAIdNumber/:customerIDnumber', getTransactionsByCustomerRSAIdNumber);
+router.get('/api/v1/diffIncomePayday/:customerIDnumber', findIncomeInBankStatement)
+
 //Schemas
 
 
@@ -79,8 +82,7 @@ function insertTransactions(req, res, next)
     .catch(next);    
 }
 
-function getCategorisations(req, res, next)
-{
+function getCategorisations(req, res, next) {
   console.log(req.params)
   truIDService.getCategorisations(req.params)
       .then(truID => res.status(200).json(truID))
@@ -126,6 +128,34 @@ function setTokenCookie(res, token) {
     };
     res.cookie('refreshToken', token, cookieOptions);
   }
-  
+  async function findIncomeInBankStatement (req, res, next) {
+    console.log(req.params.customerIDnumber,'req.params.customerIDnumber')
+    let customer = await truIDService.geCustomerByRSAIdNumber(req.params.customerIDnumber)
+    let trans = await truIDService.getTransactionsByCustomerRSAIdNumber(req.params.customerIDnumber)
+    // the array 
+    let ar = trans.transactions 
+
+    function compare(a, b) {
+      // Use toUpperCase() to ignore character casing
+      const bandA = a.balance;
+      const bandB = b.balance;
+    
+      let comparison = 0;
+      if (bandA > bandB) {
+        comparison = 1;
+      } else if (bandA < bandB) {
+        comparison = -1;
+      }
+      return comparison;
+    }
+  var incomeMonthlyFixedsalary = customer.affordability.IncomeMonthlyFixedsalary
+  var sortedArray = ar.sort(compare);
+  var lst3months = ar.slice(-3);
+  function between(x, min, max) {
+    return x >= min && x <= max;
+  }
+  let isSalaryCorrect = between(incomeMonthlyFixedsalary, lst3months[0], lst3months[1])
+    res.status(200).send({message: 'this is plumbed', lst3months,incomeMonthlyFixedsalary,isSalaryCorrect })
+  }
   module.exports = router;
   

@@ -456,6 +456,7 @@ async function appStatus(id, params, cb){
       collectionID: trucol.collectionID,
       idNumber: cust.RSAIDNumber
     };
+    // jerome this downloads all data from truid
     truIDService.downloadAllProductsbyCollectionID(truparams);
     //Sending of email
     const subject = 'Contract details'; //<h2>Your Contract.</h2>

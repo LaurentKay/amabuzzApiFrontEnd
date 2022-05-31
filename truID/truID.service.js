@@ -20,7 +20,8 @@ module.exports = {
     getCategorisations,
     uploadPDF,
     downloadAllProductsbyCollectionID,
-    getTransactionsByCustomerRSAIdNumber
+    getTransactionsByCustomerRSAIdNumber,
+    geCustomerByRSAIdNumber
 };
 
 let dbTruId;
@@ -30,6 +31,7 @@ mongodb.connect(
   connectionString,
   { useNewUrlParser: true, useUnifiedTopology: true },
   function (err, truID) {
+
     dbTruId = truID.db()
     
   }
@@ -175,21 +177,28 @@ async function insertTransactions(params) {
   })
 }
 
-async function getCategorisations(params)
-{
+async function getCategorisations(params) {
   
-      var config = {
+      let config = {
         method: 'get',
-        url: 'https://api.truidconnect.io/categorisation-api/categorisations/'+params.collectionID+'',
+        url: 'https://api.truidconnect.io/categorisation-api/categorisations/'+params.collectionID,
         headers: { 
           'Accept': 'application/json', 
           'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9'
         }
       };
       
-      const resultData  = await axios(config)
-          console.log(resultData.data)
+      try {
+          const resultData  = await axios(config) 
           return resultData.data;
+      } catch (err) {
+        console.log(err, "::::::::: this is the err")
+      } finally {
+
+      }
+    
+       
+         
 };
 
 async function uploadPDF(params)
@@ -240,33 +249,38 @@ async function downloadPDF(params)
   console.log(resultData.data)
   return resultData.data;
 };
-
-async function downloadAllProductsbyCollectionID(params)
-{
-  
-  var config = {
+/**
+ * 
+ * @param {*} params 
+ */
+async function downloadAllProductsbyCollectionID(params) {
+  let { collectionID, idNumber } = params; 
+  let productDownloadURL = 'https://api.truidconnect.io/delivery-api/collections/'+collectionID+'/products/all'
+  let config = {
     method: 'get',
-    url: 'https://api.truidconnect.io/delivery-api/collections/'+params.collectionID+'/products/all',
+    url: productDownloadURL,
     responseType:'arraybuffer',
     headers: { 
       'X-API-KEY': '9e98edfc9cf048b6b0bfaa91c1c2d7d9',
     }
-  };
-  let truID = await dbTruId.collection("truidcollections").findOne({"idNumber":params.idNumber});
-  if(!truID){
-    truParams = {
-      collectionID:params.collectionID,
-      productDownloadURL:'https://api.truidconnect.io/delivery-api/collections/'+params.collectionID+'/products/all',
-      idNumber:params.idNumber
-    };
-    insertTransactions(truParams);
-  }
+  };  
   const resultData  = await axios(config);
+  
+  let truID = await dbTruId.collection("truidcollections").findOne({"idNumber":idNumber});
+  // no truID collection for this user
+  // so create one 
+  if (!truID) {
+    // here do the work JEROEM
+    insertTransactions({ collectionID, productDownloadURL, idNumber });
+  }
+
 
   console.log("TruID returned========> ", resultData.data);
+
+
   const buff = Buffer.from(resultData.data, 'binary');
   //const text = buff.toString('ascii');
-  const fwrite = `enq${params.collectionID}.zip`;
+  const fwrite = `enq${collectionID}.zip`;
   fs.writeFileSync(fwrite, buff);
   fs.readFile(fwrite, (err, data) =>{
     if(err) throw err;
@@ -280,7 +294,7 @@ async function downloadAllProductsbyCollectionID(params)
               zip.file(valuex.name).async('base64')
               .then((datax) =>{
                 //console.log('datax ====> ', datax);
-                const filter = {"idNumber":params.idNumber, "collectionID":params.collectionID};
+                const filter = {"idNumber":idNumber, "collectionID":collectionID};
                 const bkst = {
                     $set:{
                         bankStatement: datax
@@ -295,7 +309,7 @@ async function downloadAllProductsbyCollectionID(params)
                 // console.log('Stringy=> ', datas);
                 // console.log('JSONY ===> ', JSON.parse(datas));
                 const dataj = JSON.parse(datas);
-                const filter = {"idNumber":params.idNumber, "collectionID":params.collectionID};
+                const filter = {"idNumber":idNumber, "collectionID":collectionID};
                 const bkst = {
                     $set:{
                       account: dataj.account,
@@ -318,4 +332,8 @@ async function downloadAllProductsbyCollectionID(params)
 async function getTransactionsByCustomerRSAIdNumber(rsaIDNumber) {  
   
   return await dbTruId.collection("truidcollections").findOne({"idNumber":rsaIDNumber})
+}
+async function geCustomerByRSAIdNumber(rsaIDNumber) {  
+  
+  return await dbTruId.collection("customers").findOne({"RSAIDNumber":rsaIDNumber});
 }
