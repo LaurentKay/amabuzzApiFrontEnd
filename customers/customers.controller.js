@@ -12,6 +12,9 @@ const config = require('config.json');
 const { default: axios } = require('axios');
 const xml2js = require('xml2js');
 const { validateAccountCDV } = require('../intecon/intecon');
+const {generateHashIDs} = require('../_helpers/utils');
+const {v4:uuidv4} = require("uuid");
+const ID = require('nodejs-unique-numeric-id-generator');
 
 const parser = new xml2js.Parser({explicitArray: false, trim: true, stripPrefix:true});
 const updateAssessment = (req, res, next) => {
@@ -28,6 +31,7 @@ router.post('/register', createCustomerSchema, createCustomer);
 router.get('/appMessageSettings', appMessageSettings);
 router.get('/prequalifiedids', prequalifiedids)
 router.get('/getCustomerDocs/:id',  getCustomerDocs); 
+router.get('/calculateAffordability/:id', calculateAffordability);
 //router.get('/:id', authorize(), getById);
 router.post('/uploads', uploads);
 router.post('/',  createSchema, create); //authorize(),
@@ -504,6 +508,7 @@ function createSchema(req, res, next) {
     });
     const schema = Joi.object({
         _id: Joi.string(),
+        applicationId: Joi.string(),
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         RSAIDNumber: Joi.string().required(),
@@ -584,6 +589,7 @@ function createSchema(req, res, next) {
     req.body.CreditReportStatus = req.body.CreditReportStatus ? req.body.CreditReportStatus : '';
     req.body.promoCode = req.body.promoCode ? req.body.promoCode : '';
     req.body.contractType = 'Loan'; 
+    req.body.applicationId = ID.generate(new Date().toJSON()); //generateHashIDs(uuidv4()).toUpperCase();
     
     const uploadedDocs={
       name:req.body.firstName,
@@ -619,6 +625,7 @@ function updateSchema(req, res, next) {
     });
     const schemaRules = Joi.object().keys({
         id: Joi.string(),
+        applicationId: Joi.string(),
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         RSAIDNumber: Joi.string().required(),

@@ -11,6 +11,7 @@ const customerOtpservice = require('./customerOtp.service');
 const truIDService = require('../truID/truID.service');
 const ccsService = require('../ccsConnection/ccs.service');
 const mongodb = require('mongodb');
+const { insertDebtor } = require('../debtors/debtors.controller');
 const CCSarr = [ { id: "1", SelectBox: "false", DebtorNo: "ERINTS90086", DebtorID: "89637", MSISDN: "0664790659", ContractID: "118928", ActivationDate: "20200206", ContractEndDate: "20210206", SubscriptionEndDate: "20210418", EndDateDiff: "71", PlanName: "MyMeg 500", Balance: "1848", MigrateToPrepaidDate: "2021/08/31", GroupName: "Group 1", PayPercent: "50", Last00DOTxnDateContract: "20210813", Last10Txns: "*00 I|00 I|00 I|00 I|00 I|00 I|00 I|02 I|02 I|02 I", PayDay: "M - 15", EmployerName: "Uitenhage Provincial Hospital", JobDescription: "General Assistant", AccountStatus: "D/O", NextPTP: "", LastNote: "20210810: 0634228978 cant pay anything extra on account as he want to pay the contract first and complete then will take other after ",IDNumber:"2001014800086" },
                  { id: "2", SelectBox: "false", DebtorNo: "SOPMOT02087", DebtorID: "90368", MSISDN: "0664817155", ContractID: "119762", ActivationDate: "20200219", ContractEndDate: "20220219", SubscriptionEndDate: "20210511", EndDateDiff: "-284", PlanName: "MyMeg 500", Balance: "1595", MigrateToPrepaidDate: "2021/08/31", GroupName: "Group 2", PayPercent: "47", Last00DOTxnDateContract: "20210701", Last10Txns: "*E1 I|04 I|04 I|00 I|00 I|02 I|00 I|00 I|00 I|02 I", PayDay: "M - Last Working Day", EmployerName: "Si Group Inc", JobDescription: "Truck Washer", AccountStatus: "D/O", "NextPTP": "", LastNote: "20210617: 0834041994: No answer.",IDNumber:"2402014800086" }, 
                  { id: "3", SelectBox: "false", DebtorNo: "NADGOV24086", DebtorID: "56336", MSISDN: "0664831738", ContractID: "77685",  ActivationDate: "20180515", ContractEndDate: "20220515", SubscriptionEndDate: "20210515", EndDateDiff: "-365", PlanName: "MyMeg 500", Balance: "4719", MigrateToPrepaidDate: "2021/08/31", GroupName: "Group 2", PayPercent: "49", Last00DOTxnDateContract: "20210531", Last10Txns: "*02 I|02 I|02 I|02 I|00 I|00 I|00 I|02 I|02 I|02 I", PayDay: "M - Last Working Day", EmployerName: "South African Police Services", JobDescription: "Police Officer", AccountStatus: "D/O", "NextPTP": "", LastNote: "20210728: sms sent",IDNumber:"2402034800082" }, 
@@ -47,6 +48,7 @@ module.exports = {
     prequalifiedids,
     viewContract,
     getCustomerDocs,
+    removeCustomer,
 };
 
 let dbTruId;
@@ -442,7 +444,7 @@ async function appStatus(id, params, cb){
             applicationStatus:params.applicationStatus
         }
     }
-    const result = await db.Customer.updateOne(filter, appstatus);
+    const result = await db.Customer.updateOne(filter, appstatus); 
     //the sending of email need to happen here
     const cust = await db.Customer.findOne(filter);
     //const existingCust = await db.CustomerSignature.findOne({"CustomerIDnumber":cust.RSAIDNumber, "CustomerUUID":id});
@@ -457,14 +459,17 @@ async function appStatus(id, params, cb){
       idNumber: cust.RSAIDNumber
     };
     // jerome this downloads all data from truid
-    truIDService.downloadAllProductsbyCollectionID(truparams);
+    truIDService.downloadAllProductsbyCollectionID(truparams); 
     //Sending of email
     const subject = 'Contract details'; //<h2>Your Contract.</h2>
     const html = `<p>click this link to see the details of your contract:</p>
                 <a href='https://www.amabuzz.co.za/view-contract?code=${id}&user=${cust.RSAIDNumber}'>View Contract</a>`;
                 //<p><embed src='data:application/pdf;base64,${existingCust.CustomerContract}' type='application/pdf' /></p>`;
-    console.log('HTML::: ', html);
+    //console.log('HTML::: ', html);
     await sendEmail.sendEmail({to: cust.emailAddress, subject, html});
+    //Initiate the debitCheck at this point.
+    insertDebtor(cust);
+    removeCustomer(id);
     cb(result);
 }
 async function viewContract(body, cb){
@@ -573,4 +578,7 @@ async function getApplicantSigedContract(id) {
    const customer = await db.CustomerSignature.find({ 'CustomerUUID': id });
    if (!customer) throw 'Customer contract not found ' + id;
    return customer;
+}
+async function removeCustomer(id){
+    return await db.Customer.findByIdAndRemove(id);
 }

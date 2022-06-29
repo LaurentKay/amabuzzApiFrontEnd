@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema({
     id: {type:String},
+    applicationId:{type:String},
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     RSAIDNumber: { type: String, required: true },
