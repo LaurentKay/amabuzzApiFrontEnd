@@ -463,7 +463,7 @@ async function insertDebtor(body) {
       const loanTerms = body.affordability[0].loanTerms;
       console.log(installMent,loanTerms, '::::::::::::::: instalment and loan terms :::::::::::')
       let payFreq = 2;
-      const firstInstalmentDt = dateParser(pf).substr(0,10).replace(/-/g, '');
+      const firstInstalmentDt = dateParser(pf).toLocaleString().substr(0,10).replace(/-/g, '');
       if(pf.freq === 'weekly'){
         payFreq = 0;
       }else if(pf.freq === 'fortnightly'){
