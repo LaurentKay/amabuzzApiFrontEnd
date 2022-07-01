@@ -70,7 +70,7 @@ function basicDetails(customer) {
         employerName, employerContactNumber, employmentNumber, employerAddress1, employerAddressCity, yearEmployed, monthEmployed, employerAddressPostalCode,
         salaryFrequency, salaryDay, occupation,workNumber, createdDate,
         bankName, bankBranch, bankAccountNumber, bankAccHolderName, bankAccountType, role,  account, affordability,
-        applicationStatus } = customer; //uploadedDocs,
+        applicationStatus, applicationId } = customer; //uploadedDocs,
 
    return { _id, firstName, lastName, RSAIDNumber, mobileNumber,
             homeNumber, maritalStatus, emailAddress, promoCode, homeAddress1,deliveryPostalCode, deliverySuburb, deliveryCity, deliveryAddress1,
@@ -78,7 +78,7 @@ function basicDetails(customer) {
             employerName, employerContactNumber, employmentNumber, employerAddress1, employerAddressCity, yearEmployed, monthEmployed, employerAddressPostalCode,
             salaryFrequency, salaryDay, occupation,workNumber, createdDate,
             bankName, bankBranch, bankAccountNumber, bankAccHolderName, bankAccountType, role,  account, affordability,
-            applicationStatus }; //uploadedDocs,
+            applicationStatus, applicationId }; //uploadedDocs,
 }
 function addCreditScore(customer){
     const {_id, firstName, lastName, RSAIDNumber, mobileNumber,
