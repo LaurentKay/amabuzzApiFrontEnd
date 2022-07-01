@@ -7,7 +7,7 @@ const axios = require('axios');
 const { dateParser } = require('./datab');
 const intecon = require('./../acol/intecon/intecon');
 const customerService = require('../customers/customers.service');
-const moment = require('moment');
+//const moment = require('moment');
 var getRandomValues = require('get-random-values');
 
 const xml2js = require('xml2js');
@@ -248,7 +248,7 @@ async function insertDebtor(body) {
   const ExpMaint = ExpenseMaintenance ? ExpenseMaintenance : 0;
   var applicationObj = {
     RSAIDNumber: body.RSAIDNumber,
-    firstInstalmentDate: dateParser(pf).substr(0,10),
+    firstInstalmentDate: dateParser(pf).toLocaleString().substr(0,10),
     loanAmount: loan1,
     term: loanTerms,
     Rent: ExpenseRent ? ExpenseRent : 0,
@@ -269,6 +269,8 @@ async function insertDebtor(body) {
    * @param {*} dec 
    * @returns 
    */
+  console.log('Testing installment data::::: ', applicationObj);
+  return;
    const dec2hex = (dec) => {
     return dec.toString(32).padStart(6, "fAzJKLMabcdemnopBCDEFqrstuvwxyzghijklAGHINOPQRTUVWXYZ")
   }

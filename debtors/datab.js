@@ -1,6 +1,3 @@
-
-const moment = require('moment');
-const { DateTime, Duration } = require('luxon');
 const reg = new RegExp(/^[0-9]{13}$/);
 
 
@@ -310,110 +307,122 @@ const monthOptions = (filtOpts) => [
     
 
 const byRuleCalculation = (ruleName) => {
-    let _m2ndlast
-    const sumTo = (cv, fv) => {
-        let icv = 0;
-        if (cv > fv) {
-            while (cv > fv) {
-                icv++
-                cv--
-            }
-        } else {
-            while (cv < fv) {
-                icv++
-                cv++
-            }
-        }
-        return icv
-    }
-    switch (ruleName) {
-        case 'Last Monday':
-        case 'Last Tuesday': 
-        case 'Last Wednesday': 
-        case 'Last Thursday': 
-        case 'Last Friday':
-        case 'Last Saturday':
-        case '1st Monday':
-        case '1st Tuesday':
-        case '1st Wednesday':
-        case '1st Thursday':
-        case '1st Friday':
-        case '1st Saturday': {
-            return  dateCalcer(ruleName)
-        }
-        case 'Last Working Day': {
-            let resuw = moment().endOf('month');
-            const dayNumber = resuw.day()
+    // let _m2ndlast
+    // const sumTo = (cv, fv) => {
+    //     let icv = 0;
+    //     if (cv > fv) {
+    //         while (cv > fv) {
+    //             icv++
+    //             cv--
+    //         }
+    //     } else {
+    //         while (cv < fv) {
+    //             icv++
+    //             cv++
+    //         }
+    //     }
+    //     return icv
+    // }
+    // switch (ruleName) {
+    //     case 'Last Monday':
+    //     case 'Last Tuesday': 
+    //     case 'Last Wednesday': 
+    //     case 'Last Thursday': 
+    //     case 'Last Friday':
+    //     case 'Last Saturday':
+    //     case '1st Monday':
+    //     case '1st Tuesday':
+    //     case '1st Wednesday':
+    //     case '1st Thursday':
+    //     case '1st Friday':
+    //     case '1st Saturday': {
+    //         return  dateCalcer(ruleName)
+    //     }
+    //     case 'Last Working Day': {
+    //         let resuw = moment().endOf('month');
+    //         const dayNumber = resuw.day()
 
-            if (dayNumber === 6 || dayNumber === 0) {
-                resuw.subtract(dayNumber === 0 ? 2 : 1, 'day');
-            }
-            _m2ndlast = moment(resuw.format('YYYY/MM/DD 00:00:ss'));
-            break;
-        }
-        case '2nd Last Working Day': {
-            let resuwx = moment().endOf('month');
-            resuwx.subtract(2, 'day')
-            if (resuwx.day() === 7) {
-                resuwx.subtract(2, 'day')
-            }
-            if (resuwx.day === 6) {
-                resuwx.subtract(1, 'day')
-            }
-            _m2ndlast = moment(resuwx.format('YYYY/MM/DD 00:00:ss'));
-            break;
-        }
-        default: {return false;}
+    //         if (dayNumber === 6 || dayNumber === 0) {
+    //             resuw.subtract(dayNumber === 0 ? 2 : 1, 'day');
+    //         }
+    //         _m2ndlast = moment(resuw.format('YYYY/MM/DD 00:00:ss'));
+    //         break;
+    //     }
+    //     case '2nd Last Working Day': {
+    //         let resuwx = moment().endOf('month');
+    //         resuwx.subtract(2, 'day')
+    //         if (resuwx.day() === 7) {
+    //             resuwx.subtract(2, 'day')
+    //         }
+    //         if (resuwx.day === 6) {
+    //             resuwx.subtract(1, 'day')
+    //         }
+    //         _m2ndlast = moment(resuwx.format('YYYY/MM/DD 00:00:ss'));
+    //         break;
+    //     }
+    //     default: {return false;}
 
-    }
+    // }
     
-    return _m2ndlast
+    // return _m2ndlast
 }
 
 
 const isHoliday = (dateString) => {
-    let properDate = dateString ? moment(dateString).format('YYYY-MM-DD'):  moment().format('YYYY-MM-DD')
+    //let properDate = dateString ? moment(dateString).format('YYYY-MM-DD'):  moment().format('YYYY-MM-DD')
 
-    const theDays = {'2021-01-01' : 'New Years Day',
-    '2021-03-21' : 'Human Rights Day',
-    '2021-03-22' : 'Public holiday **',
-    '2021-04-02' : 'Good Friday *',
-    '2021-04-05' : 'Family Day',
-    '2021-04-27' : 'Freedom Day',
-    '2021-05-01' : 'Workers Day',
-    '2021-06-16' : 'Youth Day',
-    '2021-08-09' : 'National Women’s Day',
-    '2021-09-24' : 'Heritage Day',
-    '2021-12-16' : 'Day of Reconciliation',
-    '2021-12-25' : 'Christmas Day',
-    '2021-12-26' : 'Day of Goodwill',
-    '2021-12-27' : 'Public holiday'}
+    const theDays = {'2022-01-01' : 'New Years Day',
+    '2022-03-21' : 'Human Rights Day',
+    '2022-03-22' : 'Public holiday **',
+    '2022-04-02' : 'Good Friday *',
+    '2022-04-05' : 'Family Day',
+    '2022-04-27' : 'Freedom Day',
+    '2022-05-01' : 'Workers Day',
+    '2022-06-16' : 'Youth Day',
+    '2022-08-09' : 'National Women’s Day',
+    '2022-09-24' : 'Heritage Day',
+    '2022-12-16' : 'Day of Reconciliation',
+    '2022-12-25' : 'Christmas Day',
+    '2022-12-26' : 'Day of Goodwill',
+    '2022-12-27' : 'Public holiday'}
 
-    return  !!theDays[properDate]
+    return  !!theDays[dateString]
 
 }
 const getWorkDay = (aDate, holiday=false) => {
     
     let workDay = aDate;
 
-    let lx = DateTime.fromISO(aDate)
-    const dayAsNumber = moment(aDate).day();
-    
+    //let lx = DateTime.fromISO(aDate)
+    const dd = new Date(aDate); //moment(aDate).day();
+    const dayAsNumber = dd.getDay();
    
     if (dayAsNumber === 0 ) {
-        workDay = lx.minus({ days: 2 })
+        //workDay = lx.minus({ days: 2 })
+        dd.setDate(ndd.getDate()-2);
+        let m = ndd.getMonth()+1;
+        m = m.toString().length === 1 ? '0'+m:m;
+        workDay = `${dd.getFullYear()+'-'+m+'-'+dd.getDate()}`; 
     }
     if (dayAsNumber === 6 ) {
-        workDay = lx.minus({ days: 1 }); //  should go back 16
+        //workDay = lx.minus({ days: 1 }); //  should go back 16
+        dd.setDate(ndd.getDate()-1);
+        let m = ndd.getMonth()+1;
+        m = m.toString().length === 1 ? '0'+m:m;
+        workDay = `${dd.getFullYear()+'-'+m+'-'+dd.getDate()}`; 
     }
     if (dayAsNumber !== 0 || dayAsNumber !== 6 && holiday === true) {
-        workDay = lx.minus({ days: 1 })
+        //workDay = lx.minus({ days: 1 })
+        dd.setDate(ndd.getDate()-1);
+        let m = ndd.getMonth()+1;
+        m = m.toString().length === 1 ? '0'+m:m;
+        workDay = `${dd.getFullYear()+'-'+m+'-'+dd.getDate()}`; 
     }
     
     let workingDay = isHoliday(workDay) === true ? getWorkDay(workDay): workDay
     console.log(workingDay,'getWorkDay',workDay)
-    let {year, month, day} = workingDay.c;
-    return moment(new Date(year,month,day));
+    //let {year, month, day} = workingDay.c;
+    return new Date(workDay); //year,month,day);
 }
 /**
  * 
@@ -446,182 +455,189 @@ function dateParser(aPaydayObj, date){
         m = m.toString().length === 1 ?  '0'+m:m;
         
         let dd = `${y+'-'+m+'-'+d}`;
+        let ndd = new Date(dd);
 
-        let newMonth = moment.utc(dd.toString()).format()
+        //let newMonth = moment.utc(dd.toString()).format()
         //console.log('Moment:::: ', newMonth, dd);
-        const weekValue = moment(newMonth).day();
+        const weekValue = ndd.getDay(); //moment(newMonth).day();
  
         if (weekValue === 0) {
-            newMonth = moment(newMonth).subtract(2, 'days')
+            //newMonth = moment(newMonth).subtract(2, 'days')
+            ndd.setDate(ndd.getDate()-2);
         }
         if (weekValue === 6) {
-            newMonth = moment(newMonth).subtract(1, 'days')
+            //newMonth = moment(newMonth).subtract(1, 'days')
+            ndd.setDate(ndd.getDate()-1);
         }
+        m = ndd.getMonth()+1;
+        m = m.toString().length === 1 ? '0'+m:m;
+        let newMonth = `${ndd.getFullYear()+'-'+m+'-'+ndd.getDate()}`;
+        let newMonthret;
         if (isHoliday(newMonth)) {
             // so you are a holiday and you're not a weekend
-            newMonth = getWorkDay(moment(newMonth).format('YYYY-MM-DD'), true);
+            newMonthret = getWorkDay(newMonth);
 
-        }
-        return newMonth._isAMomentObject? newMonth.toISOString(true) : moment(newMonth).toISOString(true);
+        }else{newMonthret = new Date(newMonth);}
+        return newMonthret;//._isAMomentObject? newMonth.toISOString(true) : moment(newMonth).toISOString(true);
 
         //paydayObj.name
     }
-    if (paydayObj.freq === 'Monthly by rule') {
+    // if (paydayObj.freq === 'Monthly by rule') {
 
-        //console.log(y, m,d)
-        let newDay = byRuleCalculation(paydayObj.name)
-        if (isHoliday(newDay)) {
-            // so you are a holiday and you're not a weekend
-           // newDay = getWorkDay(newDay, true);
-        }
+    //     //console.log(y, m,d)
+    //     let newDay = byRuleCalculation(paydayObj.name)
+    //     if (isHoliday(newDay)) {
+    //         // so you are a holiday and you're not a weekend
+    //        // newDay = getWorkDay(newDay, true);
+    //     }
 
-        return newDay
-    }
-    if (paydayObj.freq === 'Weekly' || paydayObj.freq === 'weekly') {
-        // paydayObj.name
-        // current day + a week from current day pushed to the day selected so the 
-        // following paydayObj.Name
-        const  todaysDate = moment();
-        const m = todaysDate.get('month') + 1;
-        const y = todaysDate.get('year');
-        const d = dayNumber[paydayObj.name];
-        let addDays = 7
-        if (d > moment().day()) {
-            addDays = d - moment().day();
-        } else {
-            if (d === moment().day()) {
-                let  sevenDays = moment().add(addDays, 'days');
-                return sevenDays
-            } else {
-                addDays = addDays+1
-            }
-        }
-        const aWeekFrom = moment().add(addDays, 'days');
-        const isoDate = aWeekFrom.format('YYYY-MM-DD');
-        if (isHoliday(isoDate)) {
-            // so you are a holiday and you're not a weekend
-           return getWorkDay(isoDate, true);
-        }
-        //console.log('A Week From::::: ', aWeekFrom);
-        return aWeekFrom._isAMomentObject? aWeekFrom.toISOString(true) : moment(aWeekFrom).toISOString(true);
-    }
-    if (paydayObj.freq === 'Fortnightly' || paydayObj.freq === 'fortnightly') {
-        let addDays = 14;
-        const d = dayNumber[paydayObj.name.split('2nd ')[1]];
+    //     return newDay
+    // }
+    // if (paydayObj.freq === 'Weekly' || paydayObj.freq === 'weekly') {
+    //     // paydayObj.name
+    //     // current day + a week from current day pushed to the day selected so the 
+    //     // following paydayObj.Name
+    //     const  todaysDate = moment();
+    //     const m = todaysDate.get('month') + 1;
+    //     const y = todaysDate.get('year');
+    //     const d = dayNumber[paydayObj.name];
+    //     let addDays = 7
+    //     if (d > moment().day()) {
+    //         addDays = d - moment().day();
+    //     } else {
+    //         if (d === moment().day()) {
+    //             let  sevenDays = moment().add(addDays, 'days');
+    //             return sevenDays
+    //         } else {
+    //             addDays = addDays+1
+    //         }
+    //     }
+    //     const aWeekFrom = moment().add(addDays, 'days');
+    //     const isoDate = aWeekFrom.format('YYYY-MM-DD');
+    //     if (isHoliday(isoDate)) {
+    //         // so you are a holiday and you're not a weekend
+    //        return getWorkDay(isoDate, true);
+    //     }
+    //     //console.log('A Week From::::: ', aWeekFrom);
+    //     return aWeekFrom._isAMomentObject? aWeekFrom.toISOString(true) : moment(aWeekFrom).toISOString(true);
+    // }
+    // if (paydayObj.freq === 'Fortnightly' || paydayObj.freq === 'fortnightly') {
+    //     let addDays = 14;
+    //     const d = dayNumber[paydayObj.name.split('2nd ')[1]];
 
-        if (d > moment().day()) {
-            addDays = d - moment().day()+7;
-        } else {
-            if (d === moment().day()) {
-                let  sevenDays = moment().add(addDays, 'days');
-                return sevenDays;
-            } else {
-                addDays = addDays+8;
-            }
-        }
-        const aWeekFrom = moment().add(addDays, 'days');
+    //     if (d > moment().day()) {
+    //         addDays = d - moment().day()+7;
+    //     } else {
+    //         if (d === moment().day()) {
+    //             let  sevenDays = moment().add(addDays, 'days');
+    //             return sevenDays;
+    //         } else {
+    //             addDays = addDays+8;
+    //         }
+    //     }
+    //     const aWeekFrom = moment().add(addDays, 'days');
 
-        return aWeekFrom._isAMomentObject? aWeekFrom.toISOString(true) : moment(aWeekFrom).toISOString(true); //aWeekFrom;
-    }
+    //     return aWeekFrom._isAMomentObject? aWeekFrom.toISOString(true) : moment(aWeekFrom).toISOString(true); //aWeekFrom;
+    // }
 }
 const dateCalcerOld = (w, dayOfWeek) => {
-    var date = new Date();
-    var month_week = w || 3;	// 2nd Week
-    var week_day = dayOfWeek || 5;	// Thursday
+    // var date = new Date();
+    // var month_week = w || 3;	// 2nd Week
+    // var week_day = dayOfWeek || 5;	// Thursday
 
-    var first_week = moment(date).startOf("month").day(week_day);
-    return first_week.add(7 * (month_week - 1), "days");
+    // var first_week = moment(date).startOf("month").day(week_day);
+    // return first_week.add(7 * (month_week - 1), "days");
 }
 const dateCalcer = (str, monthFromCurrentMonth) => {
    
-    const reg = /^\dnd|\drd|\dst|last|Last|Thursday|Friday|Monday|Tuesday|Wednesday|Sunday|Saturday?/gmi
-    let dayNumber = { "Sunday": 0, "Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4, "Friday": 5, "Saturday": 6 };
-    let calculateUsing = monthFromCurrentMonth || moment();
+//     const reg = /^\dnd|\drd|\dst|last|Last|Thursday|Friday|Monday|Tuesday|Wednesday|Sunday|Saturday?/gmi
+//     let dayNumber = { "Sunday": 0, "Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4, "Friday": 5, "Saturday": 6 };
+//     let calculateUsing = monthFromCurrentMonth || moment();
     
-    let ser = str.match(reg);
+//     let ser = str.match(reg);
 
-    console.log(ser,'dateCalcer dateCalcer', dayNumber[ser[1]])
+//     console.log(ser,'dateCalcer dateCalcer', dayNumber[ser[1]])
 
-    let numberFromDay = 1
-    if (ser.length === 2) {
-        numberFromDay = dayNumber[ser[1]]
-    }
-    if (ser.length === 3) {
-        numberFromDay = dayNumber[ser[2]]
-    }
+//     let numberFromDay = 1
+//     if (ser.length === 2) {
+//         numberFromDay = dayNumber[ser[1]]
+//     }
+//     if (ser.length === 3) {
+//         numberFromDay = dayNumber[ser[2]]
+//     }
    
-    let wObject = {};
-    let yearMonth = calculateUsing.format('YYYY-M-DD').split('-')
-    console.log(calculateUsing.toString(),'calculateUsing3',yearMonth)
+//     let wObject = {};
+//     let yearMonth = calculateUsing.format('YYYY-M-DD').split('-')
+//     console.log(calculateUsing.toString(),'calculateUsing3',yearMonth)
 
-    const weeksInMonth = weeksCount(yearMonth[0],yearMonth[1]);
-    const getWeekObject = (aWeeksInMonth) => {
-        if (aWeeksInMonth === 6) {
-            return {
-                '1st':1,
-                '2nd':2,
-                '3rd':3, 
-                '3rd last':3,
-                '2nd last':4,
-                'last':5
-            };
-        }
-        if (aWeeksInMonth === 5) {
-           return {
-                '1st': 1,
-                '2nd': 2,
-                '3rd last': 2,
-                '3rd': 3,
-                '2nd last': 3,
-                'last': 4
-            };
-        }
-    }
+//     const weeksInMonth = weeksCount(yearMonth[0],yearMonth[1]);
+//     const getWeekObject = (aWeeksInMonth) => {
+//         if (aWeeksInMonth === 6) {
+//             return {
+//                 '1st':1,
+//                 '2nd':2,
+//                 '3rd':3, 
+//                 '3rd last':3,
+//                 '2nd last':4,
+//                 'last':5
+//             };
+//         }
+//         if (aWeeksInMonth === 5) {
+//            return {
+//                 '1st': 1,
+//                 '2nd': 2,
+//                 '3rd last': 2,
+//                 '3rd': 3,
+//                 '2nd last': 3,
+//                 'last': 4
+//             };
+//         }
+//     }
     
 
-    var month_week = getWeekObject(weeksInMonth)[ser[0].toLowerCase()] //||3;	// 2nd Week
-  console.log(month_week,'aWeeksInMonth',weeksInMonth)
-    var week_day = numberFromDay; //||5;	// Thursday
-    let first_week = calculateUsing.startOf("month").day(week_day);
+//     var month_week = getWeekObject(weeksInMonth)[ser[0].toLowerCase()] //||3;	// 2nd Week
+//   console.log(month_week,'aWeeksInMonth',weeksInMonth)
+//     var week_day = numberFromDay; //||5;	// Thursday
+//     let first_week = calculateUsing.startOf("month").day(week_day);
 
-    let selectedDay = first_week.add(7 * (month_week ), "days")
+//     let selectedDay = first_week.add(7 * (month_week ), "days")
     
-    let todaysDate = moment();
+//     let todaysDate = moment();
 
-    let diffs = selectedDay.diff(todaysDate, 'days')
+//     let diffs = selectedDay.diff(todaysDate, 'days')
 
     
-    if (diffs < 0 ) {
+//     if (diffs < 0 ) {
         
-        let aMonthAhead  =  moment().add(1,'month');
-        let startOfMonth = moment().add(1,'month').startOf('month')
-        let mParts = aMonthAhead.format('YYYY-MM-DD').split('-');
-        const mweeksInMonth = calcWeeksInMonth(mParts[0],mParts[1]);
-        let mmonth_week = getWeekObject(mweeksInMonth)[ser[0].toLowerCase()]
-        if (diffs === -1) {
-            // a day after 
-            mmonth_week = mmonth_week -1
-            console.log(startOfMonth, 'slowly cai')
-        }
-        let nfirst_week =  startOfMonth.day(week_day);
-        console.log(nfirst_week.toString(),'calculateUsing',mmonth_week)
-        return nfirst_week.add(7 * (mmonth_week), "days")
+//         let aMonthAhead  =  moment().add(1,'month');
+//         let startOfMonth = moment().add(1,'month').startOf('month')
+//         let mParts = aMonthAhead.format('YYYY-MM-DD').split('-');
+//         const mweeksInMonth = calcWeeksInMonth(mParts[0],mParts[1]);
+//         let mmonth_week = getWeekObject(mweeksInMonth)[ser[0].toLowerCase()]
+//         if (diffs === -1) {
+//             // a day after 
+//             mmonth_week = mmonth_week -1
+//             console.log(startOfMonth, 'slowly cai')
+//         }
+//         let nfirst_week =  startOfMonth.day(week_day);
+//         console.log(nfirst_week.toString(),'calculateUsing',mmonth_week)
+//         return nfirst_week.add(7 * (mmonth_week), "days")
     
-    } else {
-        return selectedDay
-    }
+//     } else {
+//         return selectedDay
+//     }
 }
 const dateOfWeekCalculator  = (sDay) => {
 
     return sDay
 }
 const canDebitOrder = (date, a) => {
-    /*current day + 1*/
-    let aNewDate =moment.utc().add(7, 'days').format();
+    // /*current day + 1*/
+    // let aNewDate =moment.utc().add(7, 'days').format();
 
-    let canyou = moment(date).format() > moment().format() ? moment(date).format() : dateParser(a, aNewDate );
-    console.log(canyou,'canu', date, aNewDate, a)
-    return canyou
+    // let canyou = moment(date).format() > moment().format() ? moment(date).format() : dateParser(a, aNewDate );
+    // console.log(canyou,'canu', date, aNewDate, a)
+    // return canyou
 }
 const datafrequency = [{id:'noselection', name:'Make selection'},{ id: 'Weekly', name: 'Weekly' }, { id: 'Monthly', name: 'Monthly' }, { id: 'Monthly by rule', name: 'Monthly by rule' }, { id: 'Fortnightly', name: 'Fortnightly' }];
 module.exports ={

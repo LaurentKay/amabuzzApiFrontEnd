@@ -124,7 +124,8 @@ async function insertCustomerAnswers(params) {
 
         const filter1 = {"_id":params.applicationReference};
         const upApp = {
-            CreditReportStatus:params.CreditReportStatus
+            CreditReportStatus:params.CreditReportStatus,
+            AffordabilityVerificationStatus:params.AffordabilityVerificationStatus
         };
 
         await db.Customer.updateOne(filter1, upApp);
