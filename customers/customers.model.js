@@ -49,7 +49,7 @@ const schema = new Schema({
         ExpenseMedical: {type: Number},
         ExpenseTransport: {type: Number},
         ExpenseUtilities: {type: Number},
-        IncomeMonthlyFixedsalary: {type: Number},
+        IncomeMonthlyFixedSalary: {type: Number},
         IncomeMonthlyOtherIncome: {type: Number},
         IncomeMonthlyOvertime: {type: Number},
         IncomeRental: {type: Number},

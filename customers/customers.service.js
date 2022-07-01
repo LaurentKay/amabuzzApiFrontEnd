@@ -455,7 +455,7 @@ async function appStatus(id, params, cb){
     
     console.log('Anything in trucol????? :::: ', trucol, ' ========> ', trucol[0].collectionID, cust.RSAIDNumber);
     const truparams = {
-      collectionID: trucol.collectionID,
+      collectionID: trucol[0].collectionID,
       idNumber: cust.RSAIDNumber
     };
     // jerome this downloads all data from truid
