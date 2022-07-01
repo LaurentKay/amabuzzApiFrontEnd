@@ -155,6 +155,7 @@ async function insertDebtor(body) {
     createDate,
     homeAddress2,
     occupation,
+    applicationId,
   } = body;
   let newBody = {
     _id,
@@ -199,6 +200,7 @@ async function insertDebtor(body) {
     createDate,
     homeAddress2,
     occupation,
+    applicationId,
   };
   const mobileNumber1 = newBody.mobileNumber.replace(/\D|^0+/g, '+27');
   const  bankName1 = getBankName(newBody.bankName);
@@ -243,7 +245,7 @@ async function insertDebtor(body) {
   };
   //No longer needed '2021-09-25'
   console.log('InsertDebtor: The body part =====> ', clientObj);
-  let { ExpenseFood, ExpenseMaintenance, loan1, loanTerms, ExpenseRent, ExpenseAccomodation,ExpenseEducation, ExpenseMedical, ExpenseTransport,ExpenseUtilities, IncomeMonthlyFixedsalary, IncomeMonthlyOtherIncome, IncomeMonthlyOvertime  } = newBody.affordability[0]
+  let { ExpenseFood, ExpenseMaintenance, loan1, loanTerms, ExpenseRent, ExpenseAccomodation,ExpenseEducation, ExpenseMedical, ExpenseTransport,ExpenseUtilities, IncomeMonthlyFixedSalary, IncomeMonthlyOtherIncome, IncomeMonthlyOvertime  } = newBody.affordability[0]
   const ExpFood = ExpenseFood ? ExpenseFood : 0;
   const ExpMaint = ExpenseMaintenance ? ExpenseMaintenance : 0;
   var applicationObj = {
@@ -258,7 +260,7 @@ async function insertDebtor(body) {
     MedicalBills: ExpenseMedical ? ExpenseMedical : 0,
     TransportCosts: ExpenseTransport ? ExpenseTransport : 0,
     Electricity: ExpenseUtilities ? ExpenseUtilities : 0,
-    IncomeSalary: IncomeMonthlyFixedsalary ? IncomeMonthlyFixedsalary : 0,
+    IncomeSalary: IncomeMonthlyFixedSalary ? IncomeMonthlyFixedSalary : 0,
     IncomeOther: IncomeMonthlyOtherIncome ? IncomeMonthlyOtherIncome : 0,
     IncomeSupplementaryEmployment: IncomeMonthlyOvertime ? IncomeMonthlyOvertime : 0,
 
