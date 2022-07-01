@@ -248,7 +248,7 @@ async function insertDebtor(body) {
   const ExpMaint = ExpenseMaintenance ? ExpenseMaintenance : 0;
   var applicationObj = {
     RSAIDNumber: body.RSAIDNumber,
-    firstInstalmentDate: dateParser(pf).toLocaleString().substr(0,10),
+    firstInstalmentDate: dateParser(pf), //.toLocaleString().substr(0,10),
     loanAmount: loan1,
     term: loanTerms,
     Rent: ExpenseRent ? ExpenseRent : 0,
@@ -463,7 +463,7 @@ async function insertDebtor(body) {
       const loanTerms = body.affordability[0].loanTerms;
       console.log(installMent,loanTerms, '::::::::::::::: instalment and loan terms :::::::::::')
       let payFreq = 2;
-      const firstInstalmentDt = dateParser(pf).toLocaleString().substr(0,10).replace(/-/g, '');
+      const firstInstalmentDt = dateParser(pf).replace(/-/g, ''); //.toLocaleString().substr(0,10)
       if(pf.freq === 'weekly'){
         payFreq = 0;
       }else if(pf.freq === 'fortnightly'){

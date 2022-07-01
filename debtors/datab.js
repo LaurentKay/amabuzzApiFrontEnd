@@ -472,12 +472,17 @@ function dateParser(aPaydayObj, date){
         m = ndd.getMonth()+1;
         m = m.toString().length === 1 ? '0'+m:m;
         let newMonth = `${ndd.getFullYear()+'-'+m+'-'+ndd.getDate()}`;
-        let newMonthret;
+        let nwdd, newMonthret;
         if (isHoliday(newMonth)) {
             // so you are a holiday and you're not a weekend
-            newMonthret = getWorkDay(newMonth);
+            ndd = getWorkDay(newMonth);
+            m = nwdd.getMonth()+1;
+            m = m.toString().length === 1 ? '0'+m:m;
+            newMonthret = `${nwdd.getFullYear()+'-'+m+'-'+nwdd.getDate()}`;
 
-        }else{newMonthret = new Date(newMonth);}
+        }else{
+            newMonthret = newMonth;
+        }
         return newMonthret;//._isAMomentObject? newMonth.toISOString(true) : moment(newMonth).toISOString(true);
 
         //paydayObj.name
