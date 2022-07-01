@@ -270,7 +270,7 @@ async function insertDebtor(body) {
    * @returns 
    */
   console.log('Testing installment data::::: ', applicationObj);
-  return;
+  //return;
    const dec2hex = (dec) => {
     return dec.toString(32).padStart(6, "fAzJKLMabcdemnopBCDEFqrstuvwxyzghijklAGHINOPQRTUVWXYZ")
   }
