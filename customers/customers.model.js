@@ -117,6 +117,7 @@ const schema = new Schema({
     AffordabilityVerificationStatus:{type: String},
     FirstDebitOrderStatus:{type: String},
     CreditReportStatus:{type: String},
+    baningStatus:{type:String},
     CreditReportReason:{type: String},
     applicationFailureReason:{type: String},
     createDate:{type:Date, default: Date.now},

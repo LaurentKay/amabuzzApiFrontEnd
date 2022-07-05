@@ -555,6 +555,8 @@ function createSchema(req, res, next) {
         uploadedDocs:uploadedDocsSchema,
         EmploymentVerificationStatus:Joi.string().allow(null, ''),
         CreditReportStatus:Joi.string().allow(null, ''),
+        AffordabilityVerificationStatus:Joi.string().allow(null, ''),
+        baningStatus:Joi.string().allow(null, ''),
         promoCode:Joi.string().allow(null, '')
     });
     //In case data is comming from the web form these field will not be available  Assessment
@@ -587,6 +589,8 @@ function createSchema(req, res, next) {
     req.body.applicationStatus = req.body.applicationStatus ? req.body.applicationStatus : '';
     req.body.EmploymentVerificationStatus = req.body.EmploymentVerificationStatus ? req.body.EmploymentVerificationStatus : '';
     req.body.CreditReportStatus = req.body.CreditReportStatus ? req.body.CreditReportStatus : '';
+    req.body.AffordabilityVerificationStatus = req.body.AffordabilityVerificationStatus ? req.body.AffordabilityVerificationStatus : '';
+    req.body.baningStatus = req.body.baningStatus ? req.body.baningStatus : '';
     req.body.promoCode = req.body.promoCode ? req.body.promoCode : '';
     req.body.contractType = 'Loan'; 
     req.body.applicationId = ID.generate(new Date().toJSON()); //generateHashIDs(uuidv4()).toUpperCase();
@@ -667,6 +671,8 @@ function updateSchema(req, res, next) {
         uploadedDocs:uploadedDocsSchema,
         EmploymentVerificationStatus:Joi.string().allow(null, ''),
         CreditReportStatus:Joi.string().allow(null, ''),
+        AffordabilityVerificationStatus:Joi.string().allow(null, ''),
+        baningStatus:Joi.string().allow(null, ''),
         promoCode:Joi.string().allow(null, ''),
         contractType:Joi.string()
     });
