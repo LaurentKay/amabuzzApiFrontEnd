@@ -110,7 +110,8 @@ const schema = new Schema({
     verified: Date,
     account:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Account'
+        ref:'Account',
+        default:'11111111111111111111111a'
     },
     EmploymentVerificationStatus:{type: String},
     DocmentationVerificationStatus:{type: String},

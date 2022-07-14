@@ -47,14 +47,14 @@ app.get('/', (req, res, next) =>{
 app.use('/customers', require('./customers/customers.controller'));
 //app.use('/loans', require('./loans/loans.controller'));
 app.use('/compuscan', require('./compuscan/compuscan.controller'));
-//app.use('/promissory', require('./debitOrders/promissory.controller'));
+app.use('/promissory', require('./debitOrders/promissory.controller'));
 app.use('/systemConfig', require('./systemConfig/affordabilityQuestions.controller'));
 app.use('/globalConfig', require('./globalConfig/config.controller'));
 app.use('/roles', require('./roles/roles.controller'));
 app.use('/customerVerification', require('./customers/customerVerification.controller'));
 app.use('/questions', require('./questions/questions.controller'));
 app.use('/truID', require('./truID/truID.controller'));
-// app.use('/debtors', require('./debtors/debtors.controller'));
+//app.use('/debtors', require('./debtors/debtors.controller'));
 app.use('/customers', require('./customers/customerOtp.controller'));
 // swagger docs route
 app.use('/api-docs', require('_helpers/swagger'));

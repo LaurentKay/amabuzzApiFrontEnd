@@ -335,5 +335,5 @@ async function getTransactionsByCustomerRSAIdNumber(rsaIDNumber) {
 }
 async function geCustomerByRSAIdNumber(rsaIDNumber) {  
   
-  return await dbTruId.collection("customers").findOne({"RSAIDNumber":rsaIDNumber});
+  return await dbTruId.collection("debtors").findOne({"RSAIDNumber":rsaIDNumber}); //customers
 }

@@ -7,6 +7,7 @@ const axios = require('axios');
 const { dateParser } = require('./datab');
 const intecon = require('./../acol/intecon/intecon');
 const customerService = require('../customers/customers.service');
+const promissoryService = require('../debitOrders/promissory.service');
 //const moment = require('moment');
 var getRandomValues = require('get-random-values');
 
@@ -379,7 +380,8 @@ async function insertDebtor(body) {
                * not when the mandate has been established
                */
           
-              console.log('DIE OOG VANDITIET', promData.responses.CreatePromissory)
+              console.log('DIE OOG VANDITIET', promData.responses.CreatePromissory);
+              return promData.responses.CreatePromissory;
      
             })
          
@@ -401,6 +403,16 @@ async function insertDebtor(body) {
       getRandomValues(arr)
       return Array.from(arr, dec2hex).join('')
   }
+  function shuffle(str) {
+    var parts = str.split('');
+    for (var i = parts.length; i > 0;) {
+        var random = parseInt(Math.random() * i);
+        var temp = parts[--i];
+        parts[i] = parts[random];
+        parts[random] = temp;
+    }
+    return parts.join('');
+}
   /**
    * 
    * 
@@ -462,9 +474,9 @@ async function insertDebtor(body) {
       console.log('createCaliDadApplication ');
     }
     
-
+    const str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; //123456789
     try {
-      let loan_ref_no = newBody.application_id.toString() + generateId(4)
+      let loan_ref_no = newBody.application_id.toString() + shuffle(str).substr(0, 6).toUpperCase(); //generateId(4);
       const installMent = Math.ceil(body.affordability[0].installMent); // converted to cents
       const loanTerms = body.affordability[0].loanTerms;
       console.log(installMent,loanTerms, '::::::::::::::: instalment and loan terms :::::::::::')
@@ -511,6 +523,7 @@ async function insertDebtor(body) {
 
     console.log('ACOL PARAM::::=> ', acoolDetails);
      const calAcol =  await createPromisory(acoolDetails);
+     promissoryService.create(calAcol);
      newBody = Object.assign(newBody, {debitCheckInitiated:'Debit check data submitted successffuly to intecon'},{loan_ref_no},{promSentToCalidad:false});
      //add loan ref no to new body here
      message = 'ACOL created'; type = 'success';

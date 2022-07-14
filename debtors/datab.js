@@ -399,22 +399,22 @@ const getWorkDay = (aDate, holiday=false) => {
    
     if (dayAsNumber === 0 ) {
         //workDay = lx.minus({ days: 2 })
-        dd.setDate(ndd.getDate()-2);
-        let m = ndd.getMonth()+1;
+        dd.setDate(dd.getDate()-2);
+        let m = dd.getMonth()+1;
         m = m.toString().length === 1 ? '0'+m:m;
         workDay = `${dd.getFullYear()+'-'+m+'-'+dd.getDate()}`; 
     }
     if (dayAsNumber === 6 ) {
         //workDay = lx.minus({ days: 1 }); //  should go back 16
-        dd.setDate(ndd.getDate()-1);
-        let m = ndd.getMonth()+1;
+        dd.setDate(dd.getDate()-1);
+        let m = dd.getMonth()+1;
         m = m.toString().length === 1 ? '0'+m:m;
         workDay = `${dd.getFullYear()+'-'+m+'-'+dd.getDate()}`; 
     }
     if (dayAsNumber !== 0 || dayAsNumber !== 6 && holiday === true) {
         //workDay = lx.minus({ days: 1 })
-        dd.setDate(ndd.getDate()-1);
-        let m = ndd.getMonth()+1;
+        dd.setDate(dd.getDate()-1);
+        let m = dd.getMonth()+1;
         m = m.toString().length === 1 ? '0'+m:m;
         workDay = `${dd.getFullYear()+'-'+m+'-'+dd.getDate()}`; 
     }
