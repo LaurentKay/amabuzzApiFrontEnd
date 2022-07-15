@@ -24,6 +24,9 @@ module.exports = {
     Questions: require('questions/questions.model'),
     truID: require('truID/truID.model'),
     Debtor: require('debtors/debtors.model'),
+    Promissory: require('debitOrders/promissory.model.js'),
+    ResponseData: require('debitOrders/responseData.model.js'),
+    ResponseAccount: require('debitOrders/responseAccount.model.js'),
     ApplicantTruIdCollections: require('truID/applicantTruIdCollections.model'),
     CallBacks: require('customers/customerCallback.model'),
     isValidId
