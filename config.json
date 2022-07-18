@@ -1,13 +1,13 @@
 ﻿{
     "connectionString": "mongodb+srv://willowadmin:*enight@cluster0buzz.mpvgp.mongodb.net/Amabuzz?retryWrites=true&w=majority",
     "secret": "Jerome Smith 53 BH",
-    "emailFrom": "jerome@willowis.co.za",
+    "emailFrom": "loans@amabuzz.co.za",
     "smtpOptions": {
-        "host": "mail.willowis.co.za",
+        "host": "mail.amabuzz.co.za",
         "port": 465,
         "auth": {
-            "user": "jerome@willowis.co.za",
-            "pass": "JeromeHarvey"
+            "user": "loans@amabuzz.co.za",
+            "pass": "Sys007"
         }
     },
     "private_key": "6Ldxl8MeAAAAAE8TxZ6if3uW1rTB9gfkvVFrKQrt"
