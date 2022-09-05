@@ -522,7 +522,8 @@ async function insertDebtor(body) {
     };
 
     console.log('ACOL PARAM::::=> ', acoolDetails);
-     const calAcol =  await createPromisory(acoolDetails);
+     let calAcol =  await createPromisory(acoolDetails);
+     calAcol = Object.assign(calAcol, {applicationId:applicationId});
      promissoryService.create(calAcol);
      newBody = Object.assign(newBody, {debitCheckInitiated:'Debit check data submitted successffuly to intecon'},{loan_ref_no},{promSentToCalidad:false});
      //add loan ref no to new body here

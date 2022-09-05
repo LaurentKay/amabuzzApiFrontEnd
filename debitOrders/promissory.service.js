@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
 const db = require('_helpers/db');
 const Role = require('_helpers/role');
+const mongodb = require('mongodb');
 
 module.exports = {
     getAllPromissories,
@@ -15,9 +16,21 @@ module.exports = {
     insertAccount,
     getAccountData,
     getPromissoryByLoanRef,
+    addSuccessfulACOL,
+    addUnSuccessfulACOL,
 };
 
+let dbDebtors;
+let connectionString = config.connectionString
 
+mongodb.connect(
+  connectionString,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  function (err, debtors) {
+    dbDebtors = debtors.db()
+
+  }
+)
 function basicDetails(promissory) {
     const { _id, allow_date_chg , allow_max_inst ,allow_tracking ,branch_cd ,client_no ,collection_day ,create_dt ,date_adj ,first_amt ,
     first_dt ,guid ,id ,ifee_amt ,ifee_inst_amt ,ifee_perc ,ifee_type ,inst_adj_amt,inst_adj_freq ,inst_adj_rate,instalment ,loan_ref_no ,
@@ -56,7 +69,23 @@ async function create(params) {
     
     // save customer
     await promissory.save();
+    //Save successful ACOL
+    let { reply_cd, reply_str, promissory_id } = params;
+    let replyCode = parseInt(reply_cd, 10);
+    if(replyCode === 207){
+        addSuccessfulACOL(params);
+    }else {//if(replyCode !== 207){
+        addUnSuccessfulACOL(params);
+    }
     return basicDetails(promissory);
+}
+async function addSuccessfulACOL(data){
+    const result = await dbDebtors.collection('DebiCheckQSuccess').insertOne(data);
+    return result;
+}
+async function addUnSuccessfulACOL(data){
+    const result = await dbDebtors.collection('DebiCheckFailed').insertOne(data);
+    return result;
 }
 async function insertResponse(data){
     const response = new db.ResponseData(data);

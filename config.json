@@ -4,7 +4,8 @@
     "emailFrom": "loans@amabuzz.co.za",
     "smtpOptions": {
         "host": "mail.amabuzz.co.za",
-        "port": 465,
+        "port": 25,
+        "secure":false,
         "auth": {
             "user": "loans@amabuzz.co.za",
             "pass": "Sys007"
